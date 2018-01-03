@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.blueapron.connect.protobuf";
+option java_outer_classname = "TestMessageProtos";
+
+message TestMessage {
+    string test_string = 1;
+}

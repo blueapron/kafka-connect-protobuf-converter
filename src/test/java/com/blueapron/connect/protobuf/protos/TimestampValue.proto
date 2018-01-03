@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.blueapron.connect.protobuf";
+
+// Wrapper message for `Timestamp`.
+message TimestampValue {
+  // The bytes value.
+  google.protobuf.Timestamp value = 1;
+}
