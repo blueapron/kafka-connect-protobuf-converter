@@ -85,6 +85,59 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 |Timestamp    |Timestamp           |
 |Date         |Date                |
 
+## Handling field renames and deletes
+Renaming and removing fields is supported by the proto IDL, but certain output formats (for example, BigQuery) do not
+support renaming or removal. In order to support these output formats, we use a custom field option to specify the
+original name and keep the Kafka Connect schema consistent.
+
+You can specify the name for this field option using the `legacyName` configuration item. By default, the field option
+used is `legacy_name`
+
+Example: `value.converter.legacyName=legacy_name`
+
+This annotation provides a hint that allows renamed fields to be mapped to correctly to their output schema names.
+
+```
+// Before rename:
+message TestMessage {
+  string test_string = 1;
+}
+
+// After first rename:
+import "path/to/LegacyName.proto";
+
+message TestMessage {
+  string renamed_string = 1 [(blueapron.connect.protobuf.legacy_name) = "test_string"];
+}
+
+// After subsequent rename:
+import "path/to/LegacyName.proto";
+
+message TestMessage {
+  string yet_another_named_string = 1 [(blueapron.connect.protobuf.legacy_name) = "test_string"];
+}  
+
+```
+
+We can also use the same syntax to support removing fields. You can treat deleted fields as renamed fields, prefixing
+the deprecated field name with `OBSOLETE_` and including a legacy_name field option as previously detailed.
+
+```
+// Before deprecation:
+message TestMessage {
+  string test_string = 1;
+  int32 test_count = 2;
+}
+
+// After deprecation:
+import "path/to/LegacyName.proto";
+
+message TestMessage {
+  string OBSOLETE_test_string = 1 [(blueapron.connect.protobuf.legacy_name) = "test_string"];
+  int32 test_count = 2;
+}
+```
+
 ## Development
 Run tests:
 ```
