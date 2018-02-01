@@ -36,4 +36,5 @@ message NestedTestProto {
     google.protobuf.Timestamp updated_at = 4;
     Status status = 5;
     ComplexType complex_type = 6;
+    map<string,string> map_type = 7;
 }
