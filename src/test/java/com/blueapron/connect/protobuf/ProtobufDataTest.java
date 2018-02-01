@@ -36,6 +36,7 @@ import static org.junit.Assert.assertNull;
 
 public class ProtobufDataTest {
 
+  private final String LEGACY_NAME = "legacy_name";
   private final String VALUE_FIELD_NAME = "value";
 
   private SchemaAndValue getExpectedSchemaAndValue(Schema fieldSchema, Object value) {
@@ -63,7 +64,6 @@ public class ProtobufDataTest {
 
   private NestedTestProto createNestedTestProto(NestedTestProtoOuterClass.UserId id) throws ParseException {
     NestedTestProto.Builder message = NestedTestProto.newBuilder();
-    NestedTestProtoOuterClass.UserId userId = id;
     message.setUserId(id);
     message.setIsActive(true);
     message.addExperimentsActive("first experiment");
@@ -177,7 +177,7 @@ public class ProtobufDataTest {
   @Test
   public void testToConnectDataWithNestedProtobufMessageAndStringUserId() throws ParseException {
     NestedTestProto message = createNestedTestProtoStringUserId();
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     Schema expectedSchema = getExpectedNestedTestProtoSchemaStringUserId();
     assertSchemasEqual(expectedSchema, result.schema());
@@ -187,7 +187,7 @@ public class ProtobufDataTest {
   @Test
   public void testToConnectDataWithNestedProtobufMessageAndIntUserId() throws ParseException {
     NestedTestProto message = createNestedTestProtoIntUserId();
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertSchemasEqual(getExpectedNestedTestProtoSchemaIntUserId(), result.schema());
     assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaIntUserId(), getExpectedNestedTestProtoResultIntUserId()), result);
@@ -196,7 +196,7 @@ public class ProtobufDataTest {
   // Data Conversion tests
   @Test
   public void testToConnectSupportsOptionalValues() {
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     Schema schema = SchemaBuilder.OPTIONAL_BOOLEAN_SCHEMA.schema();
     assertNull(protobufData.toConnectData(schema, null));
   }
@@ -208,7 +208,7 @@ public class ProtobufDataTest {
     builder.setValue(expectedValue);
     BoolValue message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(BoolValue.class);
+    ProtobufData protobufData = new ProtobufData(BoolValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_BOOLEAN_SCHEMA, expectedValue), result);
   }
@@ -220,7 +220,7 @@ public class ProtobufDataTest {
     builder.setValue(expectedValue);
     Int32Value message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(Int32Value.class);
+    ProtobufData protobufData = new ProtobufData(Int32Value.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT32_SCHEMA, expectedValue), result);
   }
@@ -232,7 +232,7 @@ public class ProtobufDataTest {
     builder.setValue(expectedValue);
     Int64Value message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(Int64Value.class);
+    ProtobufData protobufData = new ProtobufData(Int64Value.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT64_SCHEMA, expectedValue), result);
   }
@@ -244,7 +244,7 @@ public class ProtobufDataTest {
     builder.setValue(expectedValue);
     FloatValue message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(FloatValue.class);
+    ProtobufData protobufData = new ProtobufData(FloatValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_FLOAT32_SCHEMA, expectedValue), result);
   }
@@ -256,7 +256,7 @@ public class ProtobufDataTest {
     builder.setValue(expectedValue);
     DoubleValue message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(DoubleValue.class);
+    ProtobufData protobufData = new ProtobufData(DoubleValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_FLOAT64_SCHEMA, expectedValue), result);
   }
@@ -266,7 +266,7 @@ public class ProtobufDataTest {
     String expectedValue = "Hello";
     StringValue message = createStringValueMessage(expectedValue);
 
-    ProtobufData protobufData = new ProtobufData(StringValue.class);
+    ProtobufData protobufData = new ProtobufData(StringValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_STRING_SCHEMA, expectedValue), result);
   }
@@ -281,7 +281,7 @@ public class ProtobufDataTest {
     builder.setValue(timestamp);
     TimestampValueOuterClass.TimestampValue message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class);
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
 
     Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
@@ -302,7 +302,7 @@ public class ProtobufDataTest {
     builder.setValue(dateBuilder.build());
     DateValueOuterClass.DateValue message = builder.build();
 
-    ProtobufData protobufData = new ProtobufData(DateValueOuterClass.DateValue.class);
+    ProtobufData protobufData = new ProtobufData(DateValueOuterClass.DateValue.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
 
     Schema dateSchema = org.apache.kafka.connect.data.Date.builder().optional().build();
@@ -317,14 +317,14 @@ public class ProtobufDataTest {
 
   @Test(expected = DataException.class)
   public void testToConnectSchemaMismatchPrimitive() {
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     Schema schema = Schema.OPTIONAL_FLOAT32_SCHEMA;
     protobufData.toConnectData(schema, 12L);
   }
 
   @Test(expected = DataException.class)
   public void testToConnectSchemaMismatchArray() {
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     Schema schema = SchemaBuilder.array(Schema.OPTIONAL_STRING_SCHEMA).build();
     protobufData.toConnectData(schema, Arrays.asList(1, 2, 3));
   }
@@ -342,7 +342,7 @@ public class ProtobufDataTest {
     Byte value = 15;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_INT8_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(Int32Value.class);
+    ProtobufData protobufData = new ProtobufData(Int32Value.class, LEGACY_NAME);
     protobufData.fromConnectData(struct);
   }
 
@@ -352,7 +352,7 @@ public class ProtobufDataTest {
     Short value = 15;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_INT16_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(Int32Value.class);
+    ProtobufData protobufData = new ProtobufData(Int32Value.class, LEGACY_NAME);
     protobufData.fromConnectData(struct);
   }
 
@@ -361,7 +361,7 @@ public class ProtobufDataTest {
     Integer value = 15;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_INT32_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(Int32Value.class);
+    ProtobufData protobufData = new ProtobufData(Int32Value.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = Int32Value.parseFrom(messageBytes);
 
@@ -376,7 +376,7 @@ public class ProtobufDataTest {
     Long value = 15L;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_INT64_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(Int64Value.class);
+    ProtobufData protobufData = new ProtobufData(Int64Value.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = Int64Value.parseFrom(messageBytes);
 
@@ -395,7 +395,7 @@ public class ProtobufDataTest {
 
     Struct struct = wrapValueStruct(timestampSchema.schema(), value);
 
-    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class);
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
     Message message = TimestampValueOuterClass.TimestampValue.parseFrom(protobufData.fromConnectData(struct));
     assertEquals(1, message.getAllFields().size());
 
@@ -412,7 +412,7 @@ public class ProtobufDataTest {
 
     Struct struct = wrapValueStruct(dateSchema.schema(), value);
 
-    ProtobufData protobufData = new ProtobufData(DateValueOuterClass.DateValue.class);
+    ProtobufData protobufData = new ProtobufData(DateValueOuterClass.DateValue.class, LEGACY_NAME);
     Message message = DateValueOuterClass.DateValue.parseFrom(protobufData.fromConnectData(struct));
     assertEquals(1, message.getAllFields().size());
 
@@ -425,7 +425,7 @@ public class ProtobufDataTest {
     Float value = 12.3f;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_FLOAT32_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(FloatValue.class);
+    ProtobufData protobufData = new ProtobufData(FloatValue.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = FloatValue.parseFrom(messageBytes);
 
@@ -440,7 +440,7 @@ public class ProtobufDataTest {
     Double value = 12.3;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_FLOAT64_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(DoubleValue.class);
+    ProtobufData protobufData = new ProtobufData(DoubleValue.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = DoubleValue.parseFrom(messageBytes);
 
@@ -455,7 +455,7 @@ public class ProtobufDataTest {
     Boolean value = true;
     Struct struct = wrapValueStruct(Schema.OPTIONAL_BOOLEAN_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(BoolValue.class);
+    ProtobufData protobufData = new ProtobufData(BoolValue.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = BoolValue.parseFrom(messageBytes);
 
@@ -470,7 +470,7 @@ public class ProtobufDataTest {
     String value = "Hello";
     Struct struct = wrapValueStruct(Schema.OPTIONAL_STRING_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(StringValue.class);
+    ProtobufData protobufData = new ProtobufData(StringValue.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = StringValue.parseFrom(messageBytes);
 
@@ -485,7 +485,7 @@ public class ProtobufDataTest {
     byte[] value = ByteBuffer.wrap("foo".getBytes()).array();
     Struct struct = wrapValueStruct(Schema.OPTIONAL_BYTES_SCHEMA, value);
 
-    ProtobufData protobufData = new ProtobufData(BytesValue.class);
+    ProtobufData protobufData = new ProtobufData(BytesValue.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
     Message message = BytesValue.parseFrom(messageBytes);
 
@@ -499,7 +499,7 @@ public class ProtobufDataTest {
   public void testFromConnectDataMismatchPrimitive() {
     Struct struct = wrapValueStruct(Schema.OPTIONAL_INT64_SCHEMA, 12L);
 
-    ProtobufData protobufData = new ProtobufData(BoolValue.class);
+    ProtobufData protobufData = new ProtobufData(BoolValue.class, LEGACY_NAME);
     protobufData.fromConnectData(struct);
   }
 
@@ -512,7 +512,7 @@ public class ProtobufDataTest {
     Struct struct = new Struct(getExpectedNestedTestProtoSchema());
     struct.put("updated_at", value);
 
-    ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
   }
 }

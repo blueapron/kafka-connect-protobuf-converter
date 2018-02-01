@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Field;
@@ -19,8 +20,8 @@ import org.apache.kafka.connect.errors.DataException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.google.protobuf.util.Timestamps;
@@ -29,6 +30,8 @@ class ProtobufData {
   private final Class<? extends com.google.protobuf.GeneratedMessageV3> clazz;
   private final Method newBuilder;
   private final Schema schema;
+  private final String legacyName;
+  private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
   private GeneratedMessageV3.Builder getBuilder() {
     try {
@@ -46,8 +49,29 @@ class ProtobufData {
     }
   }
 
-  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz) {
+  private String getProtoMapKey(String descriptorContainingTypeName, String connectFieldName) {
+    return descriptorContainingTypeName.concat(connectFieldName);
+  }
+
+  private String getConnectFieldName(Descriptors.FieldDescriptor descriptor) {
+    String name = descriptor.getName();
+    for (Map.Entry<Descriptors.FieldDescriptor, Object> option: descriptor.getOptions().getAllFields().entrySet()) {
+      if (option.getKey().getFullName().equalsIgnoreCase(this.legacyName)) {
+        name = option.getValue().toString();
+      }
+    }
+
+    connectProtoNameMap.put(getProtoMapKey(descriptor.getContainingType().getFullName(), name), descriptor.getName());
+    return name;
+  }
+
+  private String getProtoFieldName(String descriptorForTypeName, String connectFieldName) {
+    return connectProtoNameMap.get(getProtoMapKey(descriptorForTypeName, connectFieldName));
+  }
+
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
     this.clazz = clazz;
+    this.legacyName = legacyName;
 
     try {
       this.newBuilder = clazz.getDeclaredMethod("newBuilder");
@@ -71,7 +95,7 @@ class ProtobufData {
     final SchemaBuilder builder = SchemaBuilder.struct();
     final List<Descriptors.FieldDescriptor> fieldDescriptorList = message.getDescriptorForType().getFields();
     for (Descriptors.FieldDescriptor descriptor : fieldDescriptorList) {
-      builder.field(descriptor.getName(), toConnectSchema(descriptor));
+      builder.field(getConnectFieldName(descriptor), toConnectSchema(descriptor));
     }
 
     return builder.build();
@@ -149,7 +173,7 @@ class ProtobufData {
 
         builder = SchemaBuilder.struct();
         for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getMessageType().getFields()) {
-          builder.field(fieldDescriptor.getName(), toConnectSchema(fieldDescriptor));
+          builder.field(getConnectFieldName(fieldDescriptor), toConnectSchema(fieldDescriptor));
         }
 
         break;
@@ -280,7 +304,7 @@ class ProtobufData {
           final Map<Descriptors.FieldDescriptor, Object> fieldsMap = message.getAllFields();
           for (Map.Entry<Descriptors.FieldDescriptor, Object> pair : fieldsMap.entrySet()) {
             final Descriptors.FieldDescriptor fieldDescriptor = pair.getKey();
-            final String fieldName = fieldDescriptor.getName();
+            final String fieldName = getConnectFieldName(fieldDescriptor);
             final Field field = schema.field(fieldName);
             final Object obj = pair.getValue();
             result.put(fieldName, toConnectData(field.schema(), obj));
@@ -312,7 +336,8 @@ class ProtobufData {
   }
 
   private void fromConnectData(com.google.protobuf.GeneratedMessageV3.Builder builder, Field field, Object value) {
-    final Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByName(field.name());
+    final String protobufFieldName = getProtoFieldName(builder.getDescriptorForType().getFullName(), field.name());
+    final Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByName(protobufFieldName);
     if (fieldDescriptor == null) {
       // Ignore unknown fields
       return;

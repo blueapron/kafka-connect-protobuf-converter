@@ -3,6 +3,10 @@ syntax = "proto3";
 option java_package = "com.blueapron.connect.protobuf";
 option java_outer_classname = "TestMessageProtos";
 
+import "google/protobuf/descriptor.proto";
+import "LegacyName.proto";
+
 message TestMessage {
     string test_string = 1;
+    string some_field = 2 [(blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];
 }

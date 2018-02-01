@@ -19,20 +19,23 @@ public class ProtobufConverterTest {
 
   private final String TEST_MESSAGE_CLASS_NAME = "com.blueapron.connect.protobuf.TestMessageProtos$TestMessage";
   private static final String TEST_MSG_STRING = "Hello World";
-  private static final TestMessage HELLO_WORLD_MESSAGE = TestMessage.newBuilder().setTestString(TEST_MSG_STRING).build();
+  private static final String LEGACY_MSG_STRING = "Some renamed field";
+  private static final TestMessage HELLO_WORLD_MESSAGE = TestMessage.newBuilder().setTestString(TEST_MSG_STRING).setSomeField(LEGACY_MSG_STRING).build();
 
   private Schema getTestMessageSchema() {
     final SchemaBuilder builder = SchemaBuilder.struct();
     final SchemaBuilder fieldBuilder = SchemaBuilder.string();
     fieldBuilder.optional();
     builder.field("test_string", fieldBuilder.build());
+    builder.field("legacy_field_name", fieldBuilder.build());
     return builder.build();
   }
 
-  private Struct getTestMessageResult(String messageText) {
+  private Struct getTestMessageResult(String messageText, String legacyFieldText) {
     Schema schema = getTestMessageSchema();
     Struct result = new Struct(schema.schema());
     result.put("test_string", messageText);
+    result.put("legacy_field_name", legacyFieldText);
     return result;
   }
 
@@ -75,7 +78,7 @@ public class ProtobufConverterTest {
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, true);
     byte[] result = testMessageConverter.fromConnectData("my-topic",
                                                           getTestMessageSchema(),
-                                                          getTestMessageResult(TEST_MSG_STRING));
+                                                          getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertArrayEquals(expected, result);
   }
@@ -86,7 +89,7 @@ public class ProtobufConverterTest {
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(null, true);
     byte[] result = testMessageConverter.fromConnectData("my-topic",
       getTestMessageSchema(),
-      getTestMessageResult(TEST_MSG_STRING));
+      getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertArrayEquals(null, result);
   }
@@ -98,7 +101,7 @@ public class ProtobufConverterTest {
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, false);
     byte[] result = testMessageConverter.fromConnectData("my-topic",
       getTestMessageSchema(),
-      getTestMessageResult(TEST_MSG_STRING));
+      getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertArrayEquals(expected, result);
   }
@@ -108,7 +111,7 @@ public class ProtobufConverterTest {
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, true);
     SchemaAndValue result = testMessageConverter.toConnectData("my-topic", HELLO_WORLD_MESSAGE.toByteArray());
 
-    SchemaAndValue expected = new SchemaAndValue(getTestMessageSchema(), getTestMessageResult(TEST_MSG_STRING));
+    SchemaAndValue expected = new SchemaAndValue(getTestMessageSchema(), getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertEquals(expected, result);
   }
@@ -126,7 +129,7 @@ public class ProtobufConverterTest {
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, false);
     SchemaAndValue result = testMessageConverter.toConnectData("my-topic", HELLO_WORLD_MESSAGE.toByteArray());
 
-    SchemaAndValue expected = new SchemaAndValue(getTestMessageSchema(), getTestMessageResult(TEST_MSG_STRING));
+    SchemaAndValue expected = new SchemaAndValue(getTestMessageSchema(), getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertEquals(expected, result);
   }
