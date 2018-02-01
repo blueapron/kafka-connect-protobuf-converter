@@ -77,6 +77,7 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 |int32        |STRING             |
 |bytes        |BYTES              |
 |repeated     |ARRAY              |
+|map          |ARRAY of STRUCT    |
 
 
 |Protobuf Type|Connect Logical Type|

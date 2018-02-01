@@ -15,6 +15,7 @@ import com.google.protobuf.StringValue;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
 import org.apache.kafka.connect.data.Date;
+import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.SchemaBuilder;
@@ -73,7 +74,7 @@ public class ProtobufDataTest {
     java.util.Date date = sdf.parse("2017/09/18");
     Timestamp timestamp = Timestamps.fromMillis(date.getTime());
     message.setUpdatedAt(timestamp);
-
+    message.putMapType("Hello", "World");
     return message.build();
   }
 
@@ -100,7 +101,17 @@ public class ProtobufDataTest {
     complexTypeBuilder.field("other_id", SchemaBuilder.int32().optional().build());
     complexTypeBuilder.field("is_active", SchemaBuilder.bool().optional().build());
     builder.field("complex_type", complexTypeBuilder.optional().build());
+    builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().build()).optional().build());
     return builder.build();
+  }
+
+  private List<Struct> getTestKeyValueList(Schema schema) {
+    Struct keyValue = new Struct(schema.field("map_type").schema().valueSchema());
+    keyValue.put("key", "Hello");
+    keyValue.put("value", "World");
+    List<Struct> keyValueList = new ArrayList<Struct>();
+    keyValueList.add(keyValue);
+    return keyValueList;
   }
 
   private Struct getExpectedNestedProtoResultStringUserId() throws ParseException {
@@ -121,6 +132,7 @@ public class ProtobufDataTest {
     result.put("experiments_active", experiments);
 
     result.put("status", "INACTIVE");
+    result.put("map_type", getTestKeyValueList(schema));
     return result;
   }
 
@@ -142,7 +154,24 @@ public class ProtobufDataTest {
     result.put("experiments_active", experiments);
 
     result.put("status", "INACTIVE");
+    result.put("map_type", getTestKeyValueList(schema));
     return result;
+  }
+
+  private void assertSchemasEqual(Schema expectedSchema, Schema actualSchema) {
+    assertEquals(expectedSchema.type(), actualSchema.type());
+    assertEquals(expectedSchema.isOptional(), actualSchema.isOptional());
+
+    if (expectedSchema.type() == Schema.Type.STRUCT) {
+      assertEquals(expectedSchema.fields().size(), actualSchema.fields().size());
+      for (int i = 0; i < expectedSchema.fields().size(); ++i) {
+        Field expectedField = expectedSchema.fields().get(i);
+        Field actualField = actualSchema.field(expectedField.name());
+        assertSchemasEqual(expectedField.schema(), actualField.schema());
+      }
+    } else if (expectedSchema.type() == Schema.Type.ARRAY) {
+      assertSchemasEqual(expectedSchema.valueSchema(), actualSchema.valueSchema());
+    }
   }
 
   @Test
@@ -151,7 +180,7 @@ public class ProtobufDataTest {
     ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     Schema expectedSchema = getExpectedNestedTestProtoSchemaStringUserId();
-    assertEquals(expectedSchema, result.schema());
+    assertSchemasEqual(expectedSchema, result.schema());
     assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaStringUserId(), getExpectedNestedProtoResultStringUserId()), result);
   }
 
@@ -160,7 +189,7 @@ public class ProtobufDataTest {
     NestedTestProto message = createNestedTestProtoIntUserId();
     ProtobufData protobufData = new ProtobufData(NestedTestProto.class);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
-    assertEquals(getExpectedNestedTestProtoSchemaIntUserId(), result.schema());
+    assertSchemasEqual(getExpectedNestedTestProtoSchemaIntUserId(), result.schema());
     assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaIntUserId(), getExpectedNestedTestProtoResultIntUserId()), result);
   }
 
