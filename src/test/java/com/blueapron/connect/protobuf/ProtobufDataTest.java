@@ -226,6 +226,31 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testToConnectInt32WithSint32() {
+    int expectedValue = 12;
+    SInt32ValueOuterClass.SInt32Value.Builder builder = SInt32ValueOuterClass.SInt32Value.newBuilder();
+    builder.setValue(expectedValue);
+    SInt32ValueOuterClass.SInt32Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(SInt32ValueOuterClass.SInt32Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT32_SCHEMA, expectedValue), result);
+  }
+
+  @Test
+  public void testToConnectInt32WithUInt32() {
+    final Long UNSIGNED_RESULT = 4294967295L;
+    Integer expectedValue = -1;
+    UInt32ValueOuterClass.UInt32Value.Builder builder = UInt32ValueOuterClass.UInt32Value.newBuilder();
+    builder.setValue(expectedValue);
+    UInt32ValueOuterClass.UInt32Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(UInt32ValueOuterClass.UInt32Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT64_SCHEMA, UNSIGNED_RESULT), result);
+  }
+
+  @Test
   public void testToConnectInt64() {
     Long expectedValue = 12L;
     Int64Value.Builder builder = Int64Value.newBuilder();
@@ -233,6 +258,18 @@ public class ProtobufDataTest {
     Int64Value message = builder.build();
 
     ProtobufData protobufData = new ProtobufData(Int64Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT64_SCHEMA, expectedValue), result);
+  }
+
+  @Test
+  public void testToConnectSInt64() {
+    Long expectedValue = 12L;
+    SInt64ValueOuterClass.SInt64Value.Builder builder = SInt64ValueOuterClass.SInt64Value.newBuilder();
+    builder.setValue(expectedValue);
+    SInt64ValueOuterClass.SInt64Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(SInt64ValueOuterClass.SInt64Value.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT64_SCHEMA, expectedValue), result);
   }

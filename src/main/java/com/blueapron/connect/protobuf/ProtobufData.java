@@ -113,12 +113,17 @@ class ProtobufData {
     final SchemaBuilder builder;
 
     switch (descriptor.getType()) {
-      case INT32: {
+      case INT32:
+      case SINT32:
+      {
         builder = SchemaBuilder.int32();
         break;
       }
 
-      case INT64: {
+      case INT64:
+      case SINT64:
+      case UINT32:
+      {
         builder = SchemaBuilder.int64();
         break;
       }
@@ -229,8 +234,14 @@ class ProtobufData {
         }
 
         case INT64: {
-          Long longValue = (Long) value; // Validate type
-          converted = value;
+          try {
+            Long longValue = (Long) value; // Validate type
+            converted = value;
+          } catch (ClassCastException e) {
+            Integer intValue = (Integer) value; // Validate type
+            converted = Integer.toUnsignedLong(intValue);
+          }
+
           break;
         }
 

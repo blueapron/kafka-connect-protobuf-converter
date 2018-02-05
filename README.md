@@ -71,10 +71,13 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 | ----------- | ----------------- |
 |int32        |INT32              |
 |int64        |INT64              |
+|sint32       |INT32              |
+|sint64       |INT64              |
+|uint32       |INT64              |
 |float        |FLOAT32            |
 |double       |FLOAT64            |
 |bool         |BOOLEAN            |
-|int32        |STRING             |
+|string       |STRING             |
 |bytes        |BYTES              |
 |repeated     |ARRAY              |
 |map          |ARRAY of STRUCT    |
