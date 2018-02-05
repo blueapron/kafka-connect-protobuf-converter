@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.blueapron.connect.protobuf";
+
+// Wrapper message for `sint32`.
+message SInt32Value {
+    sint32 value = 1;
+}

@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+option java_package = "com.blueapron.connect.protobuf";
+
+// Wrapper message for `uint32`.
+message UInt32Value {
+    uint32 value = 1;
+}
