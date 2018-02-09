@@ -32,6 +32,7 @@ import static com.google.protobuf.Descriptors.FieldDescriptor.Type.ENUM;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.FLOAT;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT64;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.MESSAGE;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT64;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.STRING;
@@ -81,7 +82,9 @@ class ProtobufData {
   }
 
   private boolean isUnsetOneof(Descriptors.FieldDescriptor fieldDescriptor, Object value)  {
-    return fieldDescriptor.getContainingOneof() != null && fieldDescriptor.getDefaultValue() == value;
+    return fieldDescriptor.getContainingOneof() != null &&
+      fieldDescriptor.getType() != MESSAGE &&
+      fieldDescriptor.getDefaultValue().equals(value);
   }
 
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {

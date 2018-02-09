@@ -91,6 +91,9 @@ public class ProtobufDataTest {
     final SchemaBuilder userIdBuilder = SchemaBuilder.struct();
     userIdBuilder.field("ba_com_user_id", SchemaBuilder.string().optional().build());
     userIdBuilder.field("other_user_id", SchemaBuilder.int32().optional().build());
+    final SchemaBuilder messageIdBuilder = SchemaBuilder.struct();
+    messageIdBuilder.field("id", SchemaBuilder.string().optional().build());
+    userIdBuilder.field("another_id", messageIdBuilder.optional().build());
     builder.field("user_id", userIdBuilder.optional().build());
     builder.field("is_active", SchemaBuilder.bool().optional().build());
     builder.field("experiments_active", SchemaBuilder.array(SchemaBuilder.string().optional().build()).optional().build());
