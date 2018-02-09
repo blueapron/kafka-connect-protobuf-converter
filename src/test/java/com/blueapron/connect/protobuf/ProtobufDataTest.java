@@ -226,6 +226,18 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testToConnectInt32With0() {
+    Integer expectedValue = 0;
+    Int32Value.Builder builder = Int32Value.newBuilder();
+    builder.setValue(expectedValue);
+    Int32Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(Int32Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT32_SCHEMA, expectedValue), result);
+  }
+
+  @Test
   public void testToConnectInt32WithSint32() {
     int expectedValue = 12;
     SInt32ValueOuterClass.SInt32Value.Builder builder = SInt32ValueOuterClass.SInt32Value.newBuilder();
@@ -301,6 +313,16 @@ public class ProtobufDataTest {
   @Test
   public void testToConnectString() {
     String expectedValue = "Hello";
+    StringValue message = createStringValueMessage(expectedValue);
+
+    ProtobufData protobufData = new ProtobufData(StringValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_STRING_SCHEMA, expectedValue), result);
+  }
+
+  @Test
+  public void testToConnectEmptyString() {
+    String expectedValue = "";
     StringValue message = createStringValueMessage(expectedValue);
 
     ProtobufData protobufData = new ProtobufData(StringValue.class, LEGACY_NAME);
@@ -503,6 +525,19 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testFromConnectBooleanWithFalse() throws InvalidProtocolBufferException {
+    Boolean value = false;
+    Struct struct = wrapValueStruct(Schema.OPTIONAL_BOOLEAN_SCHEMA, value);
+
+    ProtobufData protobufData = new ProtobufData(BoolValue.class, LEGACY_NAME);
+    byte[] messageBytes = protobufData.fromConnectData(struct);
+    Message message = BoolValue.parseFrom(messageBytes);
+
+    Descriptors.FieldDescriptor fieldDescriptor = message.getDescriptorForType().findFieldByName(VALUE_FIELD_NAME);
+    assertEquals(value, message.getField(fieldDescriptor));
+  }
+
+  @Test
   public void testFromConnectString() throws InvalidProtocolBufferException {
     String value = "Hello";
     Struct struct = wrapValueStruct(Schema.OPTIONAL_STRING_SCHEMA, value);
@@ -516,6 +551,21 @@ public class ProtobufDataTest {
     Descriptors.FieldDescriptor fieldDescriptor = message.getDescriptorForType().findFieldByName(VALUE_FIELD_NAME);
     assertEquals(value, message.getField(fieldDescriptor));
   }
+
+  /*@Test
+  public void testFromConnectEmptyString() throws InvalidProtocolBufferException {
+    String value = "";
+    Struct struct = wrapValueStruct(Schema.OPTIONAL_STRING_SCHEMA, value);
+
+    ProtobufData protobufData = new ProtobufData(StringValue.class, LEGACY_NAME);
+    byte[] messageBytes = protobufData.fromConnectData(struct);
+    Message message = StringValue.parseFrom(messageBytes);
+
+    assertEquals(1, message.getAllFields().size());
+
+    Descriptors.FieldDescriptor fieldDescriptor = message.getDescriptorForType().findFieldByName(VALUE_FIELD_NAME);
+    assertEquals(value, message.getField(fieldDescriptor));
+  }*/
 
   @Test
   public void testFromConnectBytes() throws InvalidProtocolBufferException {
