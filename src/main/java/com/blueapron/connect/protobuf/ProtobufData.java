@@ -5,7 +5,6 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Field;
@@ -26,11 +25,24 @@ import java.util.List;
 import java.util.Map;
 import com.google.protobuf.util.Timestamps;
 
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.BOOL;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.BYTES;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.DOUBLE;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.ENUM;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.FLOAT;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT32;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT64;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.MESSAGE;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT32;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT64;
+import static com.google.protobuf.Descriptors.FieldDescriptor.Type.STRING;
+
+
 class ProtobufData {
-  private final Class<? extends com.google.protobuf.GeneratedMessageV3> clazz;
   private final Method newBuilder;
   private final Schema schema;
   private final String legacyName;
+  public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
   private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
   private GeneratedMessageV3.Builder getBuilder() {
@@ -69,8 +81,13 @@ class ProtobufData {
     return connectProtoNameMap.get(getProtoMapKey(descriptorForTypeName, connectFieldName));
   }
 
+  private boolean isUnsetOneof(Descriptors.FieldDescriptor fieldDescriptor, Object value)  {
+    return fieldDescriptor.getContainingOneof() != null &&
+      fieldDescriptor.getType() != MESSAGE &&
+      fieldDescriptor.getDefaultValue().equals(value);
+  }
+
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
-    this.clazz = clazz;
     this.legacyName = legacyName;
 
     try {
@@ -209,10 +226,6 @@ class ProtobufData {
   }
 
   Object toConnectData(Schema schema, Object value) {
-    if (value == null) {
-      return null;
-    }
-
     try {
       if (isProtobufTimestamp(schema)) {
         com.google.protobuf.Timestamp timestamp = (com.google.protobuf.Timestamp) value;
@@ -311,14 +324,20 @@ class ProtobufData {
 
         case STRUCT: {
           final Message message = (Message) value; // Validate type
+          if (message == message.getDefaultInstanceForType()) {
+            return null;
+          }
+
           final Struct result = new Struct(schema.schema());
-          final Map<Descriptors.FieldDescriptor, Object> fieldsMap = message.getAllFields();
-          for (Map.Entry<Descriptors.FieldDescriptor, Object> pair : fieldsMap.entrySet()) {
-            final Descriptors.FieldDescriptor fieldDescriptor = pair.getKey();
+
+          for (Descriptors.FieldDescriptor fieldDescriptor : message.getDescriptorForType().getFields()) {
             final String fieldName = getConnectFieldName(fieldDescriptor);
             final Field field = schema.field(fieldName);
-            final Object obj = pair.getValue();
-            result.put(fieldName, toConnectData(field.schema(), obj));
+
+            Object obj = message.getField(fieldDescriptor);
+            if (!isUnsetOneof(fieldDescriptor, obj)) {
+              result.put(fieldName, toConnectData(field.schema(), obj));
+            }
           }
 
           converted = result;

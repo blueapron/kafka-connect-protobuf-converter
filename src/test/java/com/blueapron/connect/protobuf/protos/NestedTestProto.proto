@@ -10,7 +10,12 @@ message UserId {
     oneof user_id {
         string ba_com_user_id = 1;
         int32 other_user_id = 2;
+        MessageId another_id = 3;
     }
+}
+
+message MessageId {
+    string id = 1;
 }
 
 enum Status {

@@ -131,6 +131,19 @@ public final class NestedTestProtoOuterClass {
      */
     int getOtherUserId();
 
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    boolean hasAnotherId();
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId();
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder getAnotherIdOrBuilder();
+
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId.UserIdCase getUserIdCase();
   }
   /**
@@ -187,6 +200,20 @@ public final class NestedTestProtoOuterClass {
               userId_ = input.readInt32();
               break;
             }
+            case 26: {
+              com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder subBuilder = null;
+              if (userIdCase_ == 3) {
+                subBuilder = ((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_).toBuilder();
+              }
+              userId_ =
+                  input.readMessage(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_);
+                userId_ = subBuilder.buildPartial();
+              }
+              userIdCase_ = 3;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -217,6 +244,7 @@ public final class NestedTestProtoOuterClass {
         implements com.google.protobuf.Internal.EnumLite {
       BA_COM_USER_ID(1),
       OTHER_USER_ID(2),
+      ANOTHER_ID(3),
       USERID_NOT_SET(0);
       private final int value;
       private UserIdCase(int value) {
@@ -234,6 +262,7 @@ public final class NestedTestProtoOuterClass {
         switch (value) {
           case 1: return BA_COM_USER_ID;
           case 2: return OTHER_USER_ID;
+          case 3: return ANOTHER_ID;
           case 0: return USERID_NOT_SET;
           default: return null;
         }
@@ -303,6 +332,32 @@ public final class NestedTestProtoOuterClass {
       return 0;
     }
 
+    public static final int ANOTHER_ID_FIELD_NUMBER = 3;
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    public boolean hasAnotherId() {
+      return userIdCase_ == 3;
+    }
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId() {
+      if (userIdCase_ == 3) {
+         return (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_;
+      }
+      return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+    }
+    /**
+     * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     */
+    public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder getAnotherIdOrBuilder() {
+      if (userIdCase_ == 3) {
+         return (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_;
+      }
+      return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -322,6 +377,9 @@ public final class NestedTestProtoOuterClass {
         output.writeInt32(
             2, (int)((java.lang.Integer) userId_));
       }
+      if (userIdCase_ == 3) {
+        output.writeMessage(3, (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -337,6 +395,10 @@ public final class NestedTestProtoOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(
               2, (int)((java.lang.Integer) userId_));
+      }
+      if (userIdCase_ == 3) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -366,6 +428,10 @@ public final class NestedTestProtoOuterClass {
           result = result && (getOtherUserId()
               == other.getOtherUserId());
           break;
+        case 3:
+          result = result && getAnotherId()
+              .equals(other.getAnotherId());
+          break;
         case 0:
         default:
       }
@@ -388,6 +454,10 @@ public final class NestedTestProtoOuterClass {
         case 2:
           hash = (37 * hash) + OTHER_USER_ID_FIELD_NUMBER;
           hash = (53 * hash) + getOtherUserId();
+          break;
+        case 3:
+          hash = (37 * hash) + ANOTHER_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getAnotherId().hashCode();
           break;
         case 0:
         default:
@@ -551,6 +621,13 @@ public final class NestedTestProtoOuterClass {
         if (userIdCase_ == 2) {
           result.userId_ = userId_;
         }
+        if (userIdCase_ == 3) {
+          if (anotherIdBuilder_ == null) {
+            result.userId_ = userId_;
+          } else {
+            result.userId_ = anotherIdBuilder_.build();
+          }
+        }
         result.userIdCase_ = userIdCase_;
         onBuilt();
         return result;
@@ -602,6 +679,10 @@ public final class NestedTestProtoOuterClass {
           }
           case OTHER_USER_ID: {
             setOtherUserId(other.getOtherUserId());
+            break;
+          }
+          case ANOTHER_ID: {
+            mergeAnotherId(other.getAnotherId());
             break;
           }
           case USERID_NOT_SET: {
@@ -759,6 +840,142 @@ public final class NestedTestProtoOuterClass {
         }
         return this;
       }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder> anotherIdBuilder_;
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public boolean hasAnotherId() {
+        return userIdCase_ == 3;
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId() {
+        if (anotherIdBuilder_ == null) {
+          if (userIdCase_ == 3) {
+            return (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_;
+          }
+          return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+        } else {
+          if (userIdCase_ == 3) {
+            return anotherIdBuilder_.getMessage();
+          }
+          return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public Builder setAnotherId(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId value) {
+        if (anotherIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          userId_ = value;
+          onChanged();
+        } else {
+          anotherIdBuilder_.setMessage(value);
+        }
+        userIdCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public Builder setAnotherId(
+          com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder builderForValue) {
+        if (anotherIdBuilder_ == null) {
+          userId_ = builderForValue.build();
+          onChanged();
+        } else {
+          anotherIdBuilder_.setMessage(builderForValue.build());
+        }
+        userIdCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public Builder mergeAnotherId(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId value) {
+        if (anotherIdBuilder_ == null) {
+          if (userIdCase_ == 3 &&
+              userId_ != com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance()) {
+            userId_ = com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.newBuilder((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            userId_ = value;
+          }
+          onChanged();
+        } else {
+          if (userIdCase_ == 3) {
+            anotherIdBuilder_.mergeFrom(value);
+          }
+          anotherIdBuilder_.setMessage(value);
+        }
+        userIdCase_ = 3;
+        return this;
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public Builder clearAnotherId() {
+        if (anotherIdBuilder_ == null) {
+          if (userIdCase_ == 3) {
+            userIdCase_ = 0;
+            userId_ = null;
+            onChanged();
+          }
+        } else {
+          if (userIdCase_ == 3) {
+            userIdCase_ = 0;
+            userId_ = null;
+          }
+          anotherIdBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder getAnotherIdBuilder() {
+        return getAnotherIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder getAnotherIdOrBuilder() {
+        if ((userIdCase_ == 3) && (anotherIdBuilder_ != null)) {
+          return anotherIdBuilder_.getMessageOrBuilder();
+        } else {
+          if (userIdCase_ == 3) {
+            return (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_;
+          }
+          return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder> 
+          getAnotherIdFieldBuilder() {
+        if (anotherIdBuilder_ == null) {
+          if (!(userIdCase_ == 3)) {
+            userId_ = com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+          }
+          anotherIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder>(
+                  (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) userId_,
+                  getParentForChildren(),
+                  isClean());
+          userId_ = null;
+        }
+        userIdCase_ = 3;
+        onChanged();;
+        return anotherIdBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -803,6 +1020,528 @@ public final class NestedTestProtoOuterClass {
     }
 
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface MessageIdOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:blueapron.connect.protobuf.MessageId)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+  }
+  /**
+   * Protobuf type {@code blueapron.connect.protobuf.MessageId}
+   */
+  public  static final class MessageId extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:blueapron.connect.protobuf.MessageId)
+      MessageIdOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use MessageId.newBuilder() to construct.
+    private MessageId(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private MessageId() {
+      id_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private MessageId(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              id_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.class, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        id_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId)) {
+        return super.equals(obj);
+      }
+      com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId other = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) obj;
+
+      boolean result = true;
+      result = result && getId()
+          .equals(other.getId());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code blueapron.connect.protobuf.MessageId}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:blueapron.connect.protobuf.MessageId)
+        com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.class, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder.class);
+      }
+
+      // Construct using com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
+      }
+
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getDefaultInstanceForType() {
+        return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
+      }
+
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId build() {
+        com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId buildPartial() {
+        com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId result = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId(this);
+        result.id_ = id_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) {
+          return mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId other) {
+        if (other == com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance()) return this;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          id_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:blueapron.connect.protobuf.MessageId)
+    }
+
+    // @@protoc_insertion_point(class_scope:blueapron.connect.protobuf.MessageId)
+    private static final com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId();
+    }
+
+    public static com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<MessageId>
+        PARSER = new com.google.protobuf.AbstractParser<MessageId>() {
+      public MessageId parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new MessageId(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<MessageId> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MessageId> getParserForType() {
+      return PARSER;
+    }
+
+    public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -3205,6 +3944,11 @@ public final class NestedTestProtoOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_blueapron_connect_protobuf_UserId_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_blueapron_connect_protobuf_MessageId_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_blueapron_connect_protobuf_ComplexType_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -3230,23 +3974,25 @@ public final class NestedTestProtoOuterClass {
     java.lang.String[] descriptorData = {
       "\n\025NestedTestProto.proto\022\032blueapron.conne" +
       "ct.protobuf\032\037google/protobuf/timestamp.p" +
-      "roto\"F\n\006UserId\022\030\n\016ba_com_user_id\030\001 \001(\tH\000" +
-      "\022\027\n\rother_user_id\030\002 \001(\005H\000B\t\n\007user_id\"R\n\013" +
-      "ComplexType\022\020\n\006one_id\030\001 \001(\tH\000\022\022\n\010other_i" +
-      "d\030\002 \001(\005H\000\022\021\n\tis_active\030\003 \001(\010B\n\n\010some_val" +
-      "\"\224\003\n\017NestedTestProto\0223\n\007user_id\030\001 \001(\0132\"." +
-      "blueapron.connect.protobuf.UserId\022\021\n\tis_" +
-      "active\030\002 \001(\010\022\032\n\022experiments_active\030\003 \003(\t" +
-      "\022.\n\nupdated_at\030\004 \001(\0132\032.google.protobuf.T",
-      "imestamp\0222\n\006status\030\005 \001(\0162\".blueapron.con" +
-      "nect.protobuf.Status\022=\n\014complex_type\030\006 \001" +
-      "(\0132\'.blueapron.connect.protobuf.ComplexT" +
-      "ype\022J\n\010map_type\030\007 \003(\01328.blueapron.connec" +
-      "t.protobuf.NestedTestProto.MapTypeEntry\032" +
-      ".\n\014MapTypeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001*\"\n\006Status\022\n\n\006ACTIVE\020\000\022\014\n\010INACTIV" +
-      "E\020\001B \n\036com.blueapron.connect.protobufb\006p" +
-      "roto3"
+      "roto\"\203\001\n\006UserId\022\030\n\016ba_com_user_id\030\001 \001(\tH" +
+      "\000\022\027\n\rother_user_id\030\002 \001(\005H\000\022;\n\nanother_id" +
+      "\030\003 \001(\0132%.blueapron.connect.protobuf.Mess" +
+      "ageIdH\000B\t\n\007user_id\"\027\n\tMessageId\022\n\n\002id\030\001 " +
+      "\001(\t\"R\n\013ComplexType\022\020\n\006one_id\030\001 \001(\tH\000\022\022\n\010" +
+      "other_id\030\002 \001(\005H\000\022\021\n\tis_active\030\003 \001(\010B\n\n\010s" +
+      "ome_val\"\224\003\n\017NestedTestProto\0223\n\007user_id\030\001" +
+      " \001(\0132\".blueapron.connect.protobuf.UserId",
+      "\022\021\n\tis_active\030\002 \001(\010\022\032\n\022experiments_activ" +
+      "e\030\003 \003(\t\022.\n\nupdated_at\030\004 \001(\0132\032.google.pro" +
+      "tobuf.Timestamp\0222\n\006status\030\005 \001(\0162\".blueap" +
+      "ron.connect.protobuf.Status\022=\n\014complex_t" +
+      "ype\030\006 \001(\0132\'.blueapron.connect.protobuf.C" +
+      "omplexType\022J\n\010map_type\030\007 \003(\01328.blueapron" +
+      ".connect.protobuf.NestedTestProto.MapTyp" +
+      "eEntry\032.\n\014MapTypeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
+      "alue\030\002 \001(\t:\0028\001*\"\n\006Status\022\n\n\006ACTIVE\020\000\022\014\n\010" +
+      "INACTIVE\020\001B \n\036com.blueapron.connect.prot",
+      "obufb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3266,15 +4012,21 @@ public final class NestedTestProtoOuterClass {
     internal_static_blueapron_connect_protobuf_UserId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_blueapron_connect_protobuf_UserId_descriptor,
-        new java.lang.String[] { "BaComUserId", "OtherUserId", "UserId", });
-    internal_static_blueapron_connect_protobuf_ComplexType_descriptor =
+        new java.lang.String[] { "BaComUserId", "OtherUserId", "AnotherId", "UserId", });
+    internal_static_blueapron_connect_protobuf_MessageId_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_blueapron_connect_protobuf_MessageId_descriptor,
+        new java.lang.String[] { "Id", });
+    internal_static_blueapron_connect_protobuf_ComplexType_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_blueapron_connect_protobuf_ComplexType_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_blueapron_connect_protobuf_ComplexType_descriptor,
         new java.lang.String[] { "OneId", "OtherId", "IsActive", "SomeVal", });
     internal_static_blueapron_connect_protobuf_NestedTestProto_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_blueapron_connect_protobuf_NestedTestProto_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_blueapron_connect_protobuf_NestedTestProto_descriptor,
