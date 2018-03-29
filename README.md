@@ -152,5 +152,6 @@ Create the JAR:
 mvn clean package
 ```
 
-Copy the JAR to `/usr/share/java/kafka-serde-tools` on your local Kafka Connect instance to make the 
+Copy the JAR with dependencies (`kafka-connect-protobuf-converter-*-jar-with-dependencies.jar`) to 
+`/usr/share/java/kafka-serde-tools` on your local Kafka Connect instance to make the 
 converter available in Kafka Connect.
