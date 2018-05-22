@@ -14,6 +14,19 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/blueapron/kafka-connect-protobuf-converter/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -76,6 +89,41 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-connect-maven-plugin</artifactId>
+                <version>0.10.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>kafka-connect</goal>
+                        </goals>
+                        <configuration>
+                            <title>Kafka Connect Protobuf Converter</title>
+                            <documentationUrl>
+                                https://github.com/blueapron/kafka-connect-protobuf-converter/blob/master/README.md
+                            </documentationUrl>
+                            <description>Proto3 converter for Kafka Connect.</description>
+                            <ownerUsername>blueapron</ownerUsername>
+                            <ownerType>organization</ownerType>
+                            <ownerName>Blue Apron, LLC.</ownerName>
+                            <ownerUrl>https://www.blueapron.com/</ownerUrl>
+                            <componentTypes>
+                                <componentType>converter</componentType>
+                            </componentTypes>
+                            <tags>
+                                <tag>proto3</tag>
+                                <tag>protocol buffers</tag>
+                                <tag>protobuf</tag>
+                                <tag>converter</tag>
+                            </tags>
+                            <supportUrl>${project.issueManagement.url}</supportUrl>
+                            <supportSummary>Support provided through community involvement.
+                            </supportSummary>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
