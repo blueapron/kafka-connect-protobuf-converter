@@ -56,7 +56,7 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 |FLOAT32            |float        |
 |FLOAT64            |double       |
 |BOOLEAN            |bool         |
-|STRING             |int32        |
+|STRING             |string       |
 |BYTES              |bytes        |
 
 
