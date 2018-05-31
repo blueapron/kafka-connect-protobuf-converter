@@ -86,6 +86,14 @@ public class ProtobufDataTest {
     return getExpectedNestedTestProtoSchema();
   }
 
+  private SchemaBuilder getComplexTypeSchemaBuilder() {
+    final SchemaBuilder complexTypeBuilder = SchemaBuilder.struct();
+    complexTypeBuilder.field("one_id", SchemaBuilder.string().optional().build());
+    complexTypeBuilder.field("other_id", SchemaBuilder.int32().optional().build());
+    complexTypeBuilder.field("is_active", SchemaBuilder.bool().optional().build());
+    return complexTypeBuilder;
+  }
+
   private Schema getExpectedNestedTestProtoSchema() {
     final SchemaBuilder builder = SchemaBuilder.struct();
     final SchemaBuilder userIdBuilder = SchemaBuilder.struct();
@@ -99,11 +107,7 @@ public class ProtobufDataTest {
     builder.field("experiments_active", SchemaBuilder.array(SchemaBuilder.string().optional().build()).optional().build());
     builder.field("updated_at", org.apache.kafka.connect.data.Timestamp.builder().optional().build());
     builder.field("status", SchemaBuilder.string().optional().build());
-    final SchemaBuilder complexTypeBuilder = SchemaBuilder.struct();
-    complexTypeBuilder.field("one_id", SchemaBuilder.string().optional().build());
-    complexTypeBuilder.field("other_id", SchemaBuilder.int32().optional().build());
-    complexTypeBuilder.field("is_active", SchemaBuilder.bool().optional().build());
-    builder.field("complex_type", complexTypeBuilder.optional().build());
+    builder.field("complex_type", getComplexTypeSchemaBuilder().optional().build());
     builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().build()).optional().build());
     return builder.build();
   }
@@ -161,6 +165,27 @@ public class ProtobufDataTest {
     return result;
   }
 
+  private NestedTestProtoOuterClass.ComplexType createProtoDefaultOneOf() throws ParseException {
+    NestedTestProtoOuterClass.ComplexType.Builder complexTypeBuilder = NestedTestProtoOuterClass.ComplexType.newBuilder();
+    complexTypeBuilder.setOtherId(0);
+    return complexTypeBuilder.build();
+  }
+
+  private NestedTestProtoOuterClass.ComplexType createProtoMultipleSetOneOf() throws ParseException {
+    NestedTestProtoOuterClass.ComplexType.Builder complexTypeBuilder = NestedTestProtoOuterClass.ComplexType.newBuilder();
+    complexTypeBuilder.setOneId("asdf");
+    complexTypeBuilder.setOtherId(0);
+    return complexTypeBuilder.build();
+  }
+
+  private Struct getExpectedComplexTypeProtoWithDefaultOneOf() {
+    Schema schema = getComplexTypeSchemaBuilder().build();
+    Struct result = new Struct(schema.schema());
+    result.put("other_id", 0);
+    result.put("is_active", false);
+    return result;
+  }
+
   private void assertSchemasEqual(Schema expectedSchema, Schema actualSchema) {
     assertEquals(expectedSchema.type(), actualSchema.type());
     assertEquals(expectedSchema.isOptional(), actualSchema.isOptional());
@@ -194,6 +219,26 @@ public class ProtobufDataTest {
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertSchemasEqual(getExpectedNestedTestProtoSchemaIntUserId(), result.schema());
     assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaIntUserId(), getExpectedNestedTestProtoResultIntUserId()), result);
+  }
+
+  @Test
+  public void testToConnectDataDefaultOneOf() throws ParseException {
+    Schema schema = getComplexTypeSchemaBuilder().build();
+    NestedTestProtoOuterClass.ComplexType message = createProtoDefaultOneOf();
+    ProtobufData protobufData = new ProtobufData(NestedTestProtoOuterClass.ComplexType.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertSchemasEqual(schema, result.schema());
+    assertEquals(new SchemaAndValue(schema, getExpectedComplexTypeProtoWithDefaultOneOf()), result);
+  }
+
+  @Test
+  public void testToConnectDataDefaultOneOfCannotHaveTwoOneOfsSet() throws ParseException {
+    Schema schema = getComplexTypeSchemaBuilder().build();
+    NestedTestProtoOuterClass.ComplexType message = createProtoMultipleSetOneOf();
+    ProtobufData protobufData = new ProtobufData(NestedTestProtoOuterClass.ComplexType.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertSchemasEqual(schema, result.schema());
+    assertEquals(new SchemaAndValue(schema, getExpectedComplexTypeProtoWithDefaultOneOf()), result);
   }
 
   // Data Conversion tests

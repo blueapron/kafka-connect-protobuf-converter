@@ -331,11 +331,19 @@ class ProtobufData {
           final Struct result = new Struct(schema.schema());
 
           for (Descriptors.FieldDescriptor fieldDescriptor : message.getDescriptorForType().getFields()) {
-            final String fieldName = getConnectFieldName(fieldDescriptor);
-            final Field field = schema.field(fieldName);
+            Descriptors.OneofDescriptor oneOfDescriptor = fieldDescriptor.getContainingOneof();
+            if (oneOfDescriptor != null) {
+              Descriptors.FieldDescriptor oneFieldDescriptor = message.getOneofFieldDescriptor(oneOfDescriptor);
 
-            Object obj = message.getField(fieldDescriptor);
-            if (!isUnsetOneof(fieldDescriptor, obj)) {
+              String oneFieldName = getConnectFieldName(oneFieldDescriptor);
+              Field oneField = schema.field(oneFieldName);
+              Object oneValue = message.getField(oneFieldDescriptor);
+
+              result.put(oneFieldName, toConnectData(oneField.schema(), oneValue));
+            } else {
+              final String fieldName = getConnectFieldName(fieldDescriptor);
+              final Field field = schema.field(fieldName);
+              Object obj = message.getField(fieldDescriptor);
               result.put(fieldName, toConnectData(field.schema(), obj));
             }
           }
