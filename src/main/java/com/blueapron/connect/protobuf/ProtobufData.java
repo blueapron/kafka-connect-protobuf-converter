@@ -3,6 +3,7 @@ package com.blueapron.connect.protobuf;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
+import com.google.protobuf.Descriptors.OneofDescriptor;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
@@ -21,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import com.google.protobuf.util.Timestamps;
@@ -79,12 +81,6 @@ class ProtobufData {
 
   private String getProtoFieldName(String descriptorForTypeName, String connectFieldName) {
     return connectProtoNameMap.get(getProtoMapKey(descriptorForTypeName, connectFieldName));
-  }
-
-  private boolean isUnsetOneof(Descriptors.FieldDescriptor fieldDescriptor, Object value)  {
-    return fieldDescriptor.getContainingOneof() != null &&
-      fieldDescriptor.getType() != MESSAGE &&
-      fieldDescriptor.getDefaultValue().equals(value);
   }
 
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
@@ -225,6 +221,13 @@ class ProtobufData {
     return Date.SCHEMA.name().equals(schema.name());
   }
 
+  private void setStructField(Schema schema, Message message, Struct result, Descriptors.FieldDescriptor fieldDescriptor) {
+    final String fieldName = getConnectFieldName(fieldDescriptor);
+    final Field field = schema.field(fieldName);
+    Object obj = message.getField(fieldDescriptor);
+    result.put(fieldName, toConnectData(field.schema(), obj));
+  }
+
   Object toConnectData(Schema schema, Object value) {
     try {
       if (isProtobufTimestamp(schema)) {
@@ -329,23 +332,20 @@ class ProtobufData {
           }
 
           final Struct result = new Struct(schema.schema());
+          final Descriptors.Descriptor descriptor = message.getDescriptorForType();
 
-          for (Descriptors.FieldDescriptor fieldDescriptor : message.getDescriptorForType().getFields()) {
+          for (OneofDescriptor oneOfDescriptor : descriptor.getOneofs()) {
+            final Descriptors.FieldDescriptor fieldDescriptor = message.getOneofFieldDescriptor(oneOfDescriptor);
+            setStructField(schema, message, result, fieldDescriptor);
+          }
+
+          for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getFields()) {
             Descriptors.OneofDescriptor oneOfDescriptor = fieldDescriptor.getContainingOneof();
             if (oneOfDescriptor != null) {
-              Descriptors.FieldDescriptor oneFieldDescriptor = message.getOneofFieldDescriptor(oneOfDescriptor);
-
-              String oneFieldName = getConnectFieldName(oneFieldDescriptor);
-              Field oneField = schema.field(oneFieldName);
-              Object oneValue = message.getField(oneFieldDescriptor);
-
-              result.put(oneFieldName, toConnectData(oneField.schema(), oneValue));
-            } else {
-              final String fieldName = getConnectFieldName(fieldDescriptor);
-              final Field field = schema.field(fieldName);
-              Object obj = message.getField(fieldDescriptor);
-              result.put(fieldName, toConnectData(field.schema(), obj));
+              continue;
             }
+
+            setStructField(schema, message, result, fieldDescriptor);
           }
 
           converted = result;
