@@ -305,11 +305,14 @@ class ProtobufData {
         case BYTES:
           if (value instanceof byte[]) {
             converted = ByteBuffer.wrap((byte[]) value);
+          } else if (value instanceof ByteString) {
+            final byte[] valueBytes = ((ByteString) value).toByteArray();
+            converted = ByteBuffer.wrap(valueBytes);
           } else if (value instanceof ByteBuffer) {
             converted = value;
           } else {
-            throw new DataException("Invalid class for bytes type, expecting byte[] or ByteBuffer "
-              + "but found " + value.getClass());
+            throw new DataException("Invalid class for bytes type, expecting byte[], ByteString, "
+              + "or ByteBuffer but found " + value.getClass());
           }
           break;
 

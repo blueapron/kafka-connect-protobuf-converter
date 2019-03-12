@@ -416,6 +416,22 @@ public class ProtobufDataTest {
     assertEquals(getExpectedSchemaAndValue(dateSchema, expectedValue), result);
   }
 
+  @Test
+  public void testToConnectBytes() {
+    byte[] bytes = "foo".getBytes();
+    ByteBuffer expectedValue = ByteBuffer.wrap(bytes);
+
+    ByteString byteString = ByteString.copyFrom(ByteBuffer.wrap(bytes));
+    BytesValueOuterClass.BytesValue.Builder builder = BytesValueOuterClass.BytesValue.newBuilder();
+    builder.setValue(byteString);
+    BytesValueOuterClass.BytesValue message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(BytesValueOuterClass.BytesValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_BYTES_SCHEMA, expectedValue), result);
+  }
+
   private Schema getValueSchema(Schema schema) {
     final SchemaBuilder schemaBuilder = SchemaBuilder.struct();
     schemaBuilder.field(VALUE_FIELD_NAME, schema);

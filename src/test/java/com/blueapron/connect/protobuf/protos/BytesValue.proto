@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+option java_package = "com.blueapron.connect.protobuf";
+
+message BytesValue {
+  bytes value = 1;
+}
