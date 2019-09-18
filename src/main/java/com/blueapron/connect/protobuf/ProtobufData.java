@@ -100,12 +100,11 @@ class ProtobufData {
     if (message == null) {
       return SchemaAndValue.NULL;
     }
-
     return new SchemaAndValue(this.schema, toConnectData(this.schema, message));
   }
 
   private Schema toConnectSchema(Message message) {
-    final SchemaBuilder builder = SchemaBuilder.struct();
+    final SchemaBuilder builder = SchemaBuilder.struct().name(message.getDescriptorForType().getName());
     final List<Descriptors.FieldDescriptor> fieldDescriptorList = message.getDescriptorForType().getFields();
     for (Descriptors.FieldDescriptor descriptor : fieldDescriptorList) {
       builder.field(getConnectFieldName(descriptor), toConnectSchema(descriptor));
@@ -188,8 +187,8 @@ class ProtobufData {
           builder = Date.builder();
           break;
         }
-
-        builder = SchemaBuilder.struct().name(descriptor.getJsonName());
+        String jsonName = descriptor.getJsonName();
+        builder = SchemaBuilder.struct().name(jsonName.substring(0, 1).toUpperCase() + jsonName.substring(1));
         for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getMessageType().getFields()) {
           builder.field(getConnectFieldName(fieldDescriptor), toConnectSchema(fieldDescriptor));
         }
