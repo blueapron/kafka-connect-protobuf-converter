@@ -7,7 +7,7 @@
     <groupId>com.blueapron</groupId>
     <artifactId>kafka-connect-protobuf-converter</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 
     <name>com.blueapron:kafka-connect-protobuf-converter</name>
     <description>Converter plugin for Kafka Connect. A converter controls the format of the data
