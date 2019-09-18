@@ -52,7 +52,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/blueapron/kafka-connect-protobuf-converter.git</connection>
-        <developerConnection>scm:git:ssh://github.com:blueapron/kafka-connect-protobuf-converter.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:blueapron/kafka-connect-protobuf-converter.git</developerConnection>
         <url>https://github.com/blueapron/kafka-connect-protobuf-converter/tree/master</url>
         <tag>HEAD</tag>
     </scm>
