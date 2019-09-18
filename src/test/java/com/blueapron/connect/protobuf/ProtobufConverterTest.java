@@ -23,7 +23,7 @@ public class ProtobufConverterTest {
   private static final TestMessage HELLO_WORLD_MESSAGE = TestMessage.newBuilder().setTestString(TEST_MSG_STRING).setSomeField(LEGACY_MSG_STRING).build();
 
   private Schema getTestMessageSchema() {
-    final SchemaBuilder builder = SchemaBuilder.struct();
+    final SchemaBuilder builder = SchemaBuilder.struct().name("TestMessage");
     final SchemaBuilder fieldBuilder = SchemaBuilder.string();
     fieldBuilder.optional();
     builder.field("test_string", fieldBuilder.build());
