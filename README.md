@@ -142,12 +142,12 @@ message TestMessage {
 ```
 
 ## Development
-Run tests:
+#### Run tests:
 ```
 mvn test
 ```
 
-Create the JAR:
+#### Create the JAR:
 ```
 mvn clean package
 ```
@@ -155,3 +155,28 @@ mvn clean package
 Copy the JAR with dependencies (`kafka-connect-protobuf-converter-*-jar-with-dependencies.jar`) to 
 `/usr/share/java/kafka-serde-tools` on your local Kafka Connect instance to make the 
 converter available in Kafka Connect.
+
+#### Deploy to Maven Central:
+
+*Note:* only internal Blue Apron employees can deploy to Maven Central
+1. Update the version to include -SNAPSHOT
+1. Prepare your local environment for the deploy
+    ```
+    cp settings.xml ~/.m2/settings.xml
+    export GPG_PASSPHRASE=
+    export OSSRH_JIRA_USERNAME=
+    export OSSRH_JIRA_PASSWORD=
+    ```
+1. Confirm the tests run
+    ```
+    mvn test
+    mvn release:clean
+    ```
+1. Prepare the release
+    ```
+    mvn release:prepare
+    ```
+1. Perform the release
+    ```
+    mvn release:perform
+    ```
