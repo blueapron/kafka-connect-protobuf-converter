@@ -169,8 +169,8 @@ converter available in Kafka Connect.
     ```
 1. Confirm the tests run
     ```
-    mvn clean
     mvn test
+    mvn release:clean
     ```
 1. Prepare the release
     ```
