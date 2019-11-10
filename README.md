@@ -64,6 +64,7 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 | ------------------ | ----------- |
 |Timestamp           |Timestamp    |
 |Date                |Date         |
+|Decimal             |uint64       |
 
 ### To Connect
 
@@ -87,6 +88,8 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 | ----------- | ------------------ |
 |Timestamp    |Timestamp           |
 |Date         |Date                |
+|uint64       |Decimal             |
+
 
 ## Handling field renames and deletes
 Renaming and removing fields is supported by the proto IDL, but certain output formats (for example, BigQuery) do not

@@ -8,6 +8,7 @@ import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import org.apache.kafka.connect.data.Date;
+import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
@@ -18,11 +19,12 @@ import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import com.google.protobuf.util.Timestamps;
@@ -34,13 +36,13 @@ import static com.google.protobuf.Descriptors.FieldDescriptor.Type.ENUM;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.FLOAT;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT64;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.MESSAGE;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT64;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.STRING;
 
 
 class ProtobufData {
+  public static final String CONNECT_DECIMAL_PRECISION_PROP = "connect.decimal.precision";
   private final Method newBuilder;
   private final Schema schema;
   private final String legacyName;
@@ -139,6 +141,10 @@ class ProtobufData {
         builder = SchemaBuilder.int64();
         break;
       }
+
+      case UINT64:
+        builder = Decimal.builder(0).parameter(CONNECT_DECIMAL_PRECISION_PROP, "20");
+        break;
 
       case FLOAT: {
         builder = SchemaBuilder.float32();
@@ -309,6 +315,9 @@ class ProtobufData {
             converted = ByteBuffer.wrap(valueBytes);
           } else if (value instanceof ByteBuffer) {
             converted = value;
+          } else if (value instanceof Long){
+            BigInteger unsigned = toUnsigned(BigInteger.valueOf((Long) value), 8);
+            converted = new BigDecimal(unsigned, 0);
           } else {
             throw new DataException("Invalid class for bytes type, expecting byte[], ByteString, "
               + "or ByteBuffer but found " + value.getClass());
@@ -363,6 +372,11 @@ class ProtobufData {
       throw new DataException("Invalid type for " + schema.type() + ": " + value.getClass());
     }
   }
+
+  private static BigInteger toUnsigned(BigInteger num, int sizeInBytes) {
+    return num.andNot(BigInteger.valueOf(-1).shiftLeft(sizeInBytes * 8));
+  }
+
 
   byte[] fromConnectData(Object value) {
     final com.google.protobuf.GeneratedMessageV3.Builder builder = getBuilder();
