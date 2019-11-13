@@ -64,7 +64,6 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 | ------------------ | ----------- |
 |Timestamp           |Timestamp    |
 |Date                |Date         |
-|Decimal             |uint64       |
 
 ### To Connect
 
