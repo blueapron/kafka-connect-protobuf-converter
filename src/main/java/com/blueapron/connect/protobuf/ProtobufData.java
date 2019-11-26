@@ -231,11 +231,17 @@ class ProtobufData {
     try {
       if (isProtobufTimestamp(schema)) {
         com.google.protobuf.Timestamp timestamp = (com.google.protobuf.Timestamp) value;
+        if (timestamp == timestamp.getDefaultInstanceForType()) {
+          return null;
+        }
         return Timestamp.toLogical(schema, Timestamps.toMillis(timestamp));
       }
 
       if (isProtobufDate(schema)) {
         com.google.type.Date date = (com.google.type.Date) value;
+        if (date == date.getDefaultInstanceForType()) {
+          return null;
+        }
         return ProtobufUtils.convertFromGoogleDate(date);
       }
 
