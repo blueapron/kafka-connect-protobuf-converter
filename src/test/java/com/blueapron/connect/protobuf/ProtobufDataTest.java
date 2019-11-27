@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -396,6 +397,35 @@ public class ProtobufDataTest {
     String expectedName = "TimestampValue";
 
     Timestamp timestamp = Timestamps.fromMillis(expectedValue.getTime());
+    TimestampValueOuterClass.TimestampValue.Builder builder = TimestampValueOuterClass.TimestampValue.newBuilder();
+    builder.setValue(timestamp);
+    TimestampValueOuterClass.TimestampValue message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
+    assertEquals(getExpectedSchemaAndValue(timestampSchema, expectedValue, expectedName), result);
+  }
+
+  @Test
+  public void testToConnectNullTimestamp() {
+    String expectedName = "TimestampValue";
+    TimestampValueOuterClass.TimestampValue message = TimestampValueOuterClass.TimestampValue.getDefaultInstance();
+
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
+    assertEquals(getExpectedSchemaAndValue(timestampSchema, null, expectedName), result);
+  }
+
+  @Test
+  public void testToConnectEpochTimestamp() {
+    java.util.Date expectedValue = java.util.Date.from(Instant.EPOCH);
+    String expectedName = "TimestampValue";
+
+    Timestamp timestamp = Timestamp.getDefaultInstance();
     TimestampValueOuterClass.TimestampValue.Builder builder = TimestampValueOuterClass.TimestampValue.newBuilder();
     builder.setValue(timestamp);
     TimestampValueOuterClass.TimestampValue message = builder.build();

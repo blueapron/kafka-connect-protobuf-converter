@@ -223,25 +223,22 @@ class ProtobufData {
   private void setStructField(Schema schema, Message message, Struct result, Descriptors.FieldDescriptor fieldDescriptor) {
     final String fieldName = getConnectFieldName(fieldDescriptor);
     final Field field = schema.field(fieldName);
-    Object obj = message.getField(fieldDescriptor);
-    result.put(fieldName, toConnectData(field.schema(), obj));
+    Object obj = null;
+    if (fieldDescriptor.getType() != MESSAGE || fieldDescriptor.isRepeated() || fieldDescriptor.isMapField() || message.hasField(fieldDescriptor)) {
+      obj = toConnectData(field.schema(), message.getField(fieldDescriptor));
+    }
+    result.put(fieldName, obj);
   }
 
   Object toConnectData(Schema schema, Object value) {
     try {
       if (isProtobufTimestamp(schema)) {
         com.google.protobuf.Timestamp timestamp = (com.google.protobuf.Timestamp) value;
-        if (timestamp == timestamp.getDefaultInstanceForType()) {
-          return null;
-        }
         return Timestamp.toLogical(schema, Timestamps.toMillis(timestamp));
       }
 
       if (isProtobufDate(schema)) {
         com.google.type.Date date = (com.google.type.Date) value;
-        if (date == date.getDefaultInstanceForType()) {
-          return null;
-        }
         return ProtobufUtils.convertFromGoogleDate(date);
       }
 
@@ -335,9 +332,6 @@ class ProtobufData {
 
         case STRUCT: {
           final Message message = (Message) value; // Validate type
-          if (message == message.getDefaultInstanceForType()) {
-            return null;
-          }
 
           final Struct result = new Struct(schema.schema());
           final Descriptors.Descriptor descriptor = message.getDescriptorForType();
