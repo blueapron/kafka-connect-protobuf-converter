@@ -1,6 +1,7 @@
 package com.blueapron.connect.protobuf;
 
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
+import com.blueapron.connect.protobuf.UInt64ValueOuterClass.UInt64Value;
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.BytesValue;
@@ -15,6 +16,7 @@ import com.google.protobuf.StringValue;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
 import org.apache.kafka.connect.data.Date;
+import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
@@ -23,6 +25,7 @@ import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.blueapron.connect.protobuf.ProtobufData.CONNECT_DECIMAL_PRECISION_PROP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -38,6 +42,7 @@ public class ProtobufDataTest {
 
   private final String LEGACY_NAME = "legacy_name";
   private final String VALUE_FIELD_NAME = "value";
+  public static final Schema OPTIONAL_DECIMAL_SCHEMA = Decimal.builder(0).parameter(CONNECT_DECIMAL_PRECISION_PROP, "20").optional().build();
 
   private SchemaAndValue getExpectedSchemaAndValue(Schema fieldSchema, Object value, String name) {
     final SchemaBuilder schemaBuilder = SchemaBuilder.struct().name(name);
@@ -326,6 +331,22 @@ public class ProtobufDataTest {
     ProtobufData protobufData = new ProtobufData(Int64Value.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     assertEquals(getExpectedSchemaAndValue(Schema.OPTIONAL_INT64_SCHEMA, expectedValue, expectedName), result);
+  }
+
+  @Test
+  public void testToConnectUInt64() {
+    BigDecimal expectedValue = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.valueOf(1));
+    String expectedName = "UInt64Value";
+
+    UInt64Value.Builder builder = UInt64Value.newBuilder();
+    builder.setValue(expectedValue.longValue());
+    UInt64Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(UInt64Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    SchemaAndValue expectedSchemaAndValue = getExpectedSchemaAndValue(OPTIONAL_DECIMAL_SCHEMA, expectedValue, expectedName);
+    assertEquals(expectedSchemaAndValue, result);
   }
 
   @Test
