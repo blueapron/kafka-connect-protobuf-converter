@@ -3,6 +3,7 @@ package com.blueapron.connect.protobuf;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.OneofDescriptor;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -229,8 +230,11 @@ class ProtobufData {
   private void setStructField(Schema schema, Message message, Struct result, Descriptors.FieldDescriptor fieldDescriptor) {
     final String fieldName = getConnectFieldName(fieldDescriptor);
     final Field field = schema.field(fieldName);
-    Object obj = message.getField(fieldDescriptor);
-    result.put(fieldName, toConnectData(field.schema(), obj));
+    Object obj = null;
+    if (fieldDescriptor.getType() != FieldDescriptor.Type.MESSAGE || fieldDescriptor.isRepeated() || fieldDescriptor.isMapField() || message.hasField(fieldDescriptor)) {
+      obj = toConnectData(field.schema(), message.getField(fieldDescriptor));
+    }
+    result.put(fieldName, obj);
   }
 
   Object toConnectData(Schema schema, Object value) {
@@ -338,9 +342,6 @@ class ProtobufData {
 
         case STRUCT: {
           final Message message = (Message) value; // Validate type
-          if (message == message.getDefaultInstanceForType()) {
-            return null;
-          }
 
           final Struct result = new Struct(schema.schema());
           final Descriptors.Descriptor descriptor = message.getDescriptorForType();
