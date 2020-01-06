@@ -5,7 +5,7 @@
     <groupId>com.blueapron</groupId>
     <artifactId>kafka-connect-protobuf-converter</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.2-SNAPSHOT</version>
+    <version>2.3.0-SNAPSHOT</version>
 
     <name>com.blueapron:kafka-connect-protobuf-converter</name>
     <description>Converter plugin for Kafka Connect. A converter controls the format of the data
@@ -18,7 +18,8 @@
     </organization>
 
     <properties>
-        <protobuf.version>3.4.0</protobuf.version>
+        <java.version>1.8</java.version>
+        <protobuf.version>3.11.1</protobuf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -170,6 +171,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.9.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -178,14 +182,14 @@
                         </goals>
                     </execution>
                 </executions>
-                </plugin>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.3</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
             <plugin>
