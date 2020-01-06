@@ -174,7 +174,7 @@ converter available in Kafka Connect.
 
 *Note:* only internal Blue Apron employees can deploy to Maven Central
 1. Update the version to include -SNAPSHOT
-1. Prepare your local environment for the deploy
+1. Prepare your local environment for the deploy. If you already have a custom `~/.m2/settings.xml`, you may want to back up or merge your existing file rather than overwrite it.
     ```
     cp settings.xml ~/.m2/settings.xml
     export GPG_PASSPHRASE=
