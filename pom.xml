@@ -107,7 +107,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.0.0-M1</version>
                 <executions>
                     <execution>
                         <id>default-deploy</id>
