@@ -42,7 +42,7 @@ import static org.junit.Assert.assertNull;
 
 public class ProtobufDataTest {
 
-  private final String LEGACY_NAME = "legacy_name";
+  private final String LEGACY_NAME = "blueapron.connect.protobuf.legacy_name";
   private final String VALUE_FIELD_NAME = "value";
   public static final Schema OPTIONAL_DECIMAL_SCHEMA = Decimal.builder(0).parameter(CONNECT_DECIMAL_PRECISION_PROP, "20").optional().build();
 
