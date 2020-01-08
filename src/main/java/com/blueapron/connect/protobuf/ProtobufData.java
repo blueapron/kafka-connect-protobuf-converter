@@ -73,7 +73,7 @@ class ProtobufData {
   private String getConnectFieldName(Descriptors.FieldDescriptor descriptor) {
     String name = descriptor.getName();
     for (Map.Entry<Descriptors.FieldDescriptor, Object> option: descriptor.getOptions().getAllFields().entrySet()) {
-      if (option.getKey().getName().equalsIgnoreCase(this.legacyName)) {
+      if (option.getKey().getFullName().equalsIgnoreCase(this.legacyName)) {
         name = option.getValue().toString();
       }
     }

@@ -1,6 +1,6 @@
 # kafka-connect-protobuf-converter
 Converter plugin for [Kafka Connect](https://docs.confluent.io/current/connect/). A converter
-controls the format of the data that will be written to Kafka for source connectors or 
+controls the format of the data that will be written to Kafka for source connectors or
 read from Kafka for sink connectors.
 
 ## Compatibility
@@ -11,7 +11,7 @@ The 2.x release series is compatible with Kafka Connect 5.x. and up (older relea
 
 ## Usage
 
-Copy the `kafka-connect-protobuf-converter` jar and the jar containing your compiled protocol buffers to 
+Copy the `kafka-connect-protobuf-converter` jar and the jar containing your compiled protocol buffers to
 `/usr/share/java/kafka-serde-tools` on your Kafka Connect instance and restart Kafka Connect.
 
 Converters can be specified on a per-connector basis.
@@ -19,7 +19,7 @@ Converters can be specified on a per-connector basis.
 To use the protobuf converter in Kafka Connect, specify the converter as your key and value converter and specify the
 protocol buffer class you want to use to deserialize the message (ex: `com.google.protobuf.Int32Value`).
 
-Note: Nested classes must be specified using the `$` notation, for example 
+Note: Nested classes must be specified using the `$` notation, for example
 `com.blueapron.connect.protobuf.NestedTestProtoOuterClass$NestedTestProto`
 
 Example Kafka Connect JDBC source:
@@ -105,7 +105,7 @@ original name and keep the Kafka Connect schema consistent.
 You can specify the name for this field option using the `legacyName` configuration item. By default, the field option
 used is `legacy_name`
 
-Example: `value.converter.legacyName=legacy_name`
+Example: `value.converter.legacyName=blueapron.connect.protobuf.legacy_name`
 
 This annotation provides a hint that allows renamed fields to be mapped to correctly to their output schema names.
 
@@ -127,7 +127,7 @@ import "path/to/LegacyName.proto";
 
 message TestMessage {
   string yet_another_named_string = 1 [(blueapron.connect.protobuf.legacy_name) = "test_string"];
-}  
+}
 
 ```
 
@@ -166,8 +166,8 @@ mvn test
 mvn clean package
 ```
 
-Copy the JAR with dependencies (`kafka-connect-protobuf-converter-*-jar-with-dependencies.jar`) to 
-`/usr/share/java/kafka-serde-tools` on your local Kafka Connect instance to make the 
+Copy the JAR with dependencies (`kafka-connect-protobuf-converter-*-jar-with-dependencies.jar`) to
+`/usr/share/java/kafka-serde-tools` on your local Kafka Connect instance to make the
 converter available in Kafka Connect.
 
 #### Deploy to Maven Central:
@@ -193,4 +193,11 @@ converter available in Kafka Connect.
 1. Perform the release
     ```
     mvn release:perform
+    ```
+
+#### Generate protos:
+
+    Run the below command from the repository root.
+    ```
+    protoc -I=src/test/java/com/blueapron/connect/protobuf/protos --java_out=src/test/java/ src/test/java/com/blueapron/connect/protobuf/protos/*.proto
     ```
