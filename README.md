@@ -194,3 +194,10 @@ converter available in Kafka Connect.
     ```
     mvn release:perform
     ```
+
+#### Generate protos:
+
+    Run the below command from the repository root.
+    ```
+    protoc -I=src/test/java/com/blueapron/connect/protobuf/protos --java_out=src/test/java/ src/test/java/com/blueapron/connect/protobuf/protos/*.proto
+    ```
