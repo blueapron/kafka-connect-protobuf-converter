@@ -5,7 +5,7 @@
     <groupId>com.blueapron</groupId>
     <artifactId>kafka-connect-protobuf-converter</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
 
     <name>com.blueapron:kafka-connect-protobuf-converter</name>
     <description>Converter plugin for Kafka Connect. A converter controls the format of the data
@@ -53,7 +53,7 @@
         <connection>scm:git:git://github.com/blueapron/kafka-connect-protobuf-converter.git</connection>
         <developerConnection>scm:git:git@github.com:blueapron/kafka-connect-protobuf-converter.git</developerConnection>
         <url>https://github.com/blueapron/kafka-connect-protobuf-converter/tree/master</url>
-        <tag>v3.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <dependencies>
