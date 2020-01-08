@@ -1,6 +1,7 @@
 package com.blueapron.connect.protobuf;
 
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
+import com.blueapron.connect.protobuf.TestMessageProtos.TestMessage;
 import com.blueapron.connect.protobuf.UInt64ValueOuterClass.UInt64Value;
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
@@ -15,7 +16,7 @@ import com.google.protobuf.Message;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
-import org.apache.kafka.connect.data.Date;
+import java.util.stream.Collectors;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
@@ -84,6 +85,13 @@ public class ProtobufDataTest {
     return message.build();
   }
 
+  private TestMessage createLegacyTestProto() throws ParseException {
+    return TestMessage.newBuilder()
+      .setTestString("hello")
+      .setSomeField("goodbye")
+      .build();
+  }
+
   private Schema getExpectedNestedTestProtoSchemaStringUserId() {
     return getExpectedNestedTestProtoSchema();
   }
@@ -115,6 +123,13 @@ public class ProtobufDataTest {
     builder.field("status", SchemaBuilder.string().optional().build());
     builder.field("complex_type", getComplexTypeSchemaBuilder().optional().build());
     builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapType").build()).optional().build());
+    return builder.build();
+  }
+
+  private Schema getLegacyTestSchema() {
+    final SchemaBuilder builder = SchemaBuilder.struct().name("TestMessage");
+    builder.field("test_string", SchemaBuilder.string().optional().build());
+    builder.field("legacy_field_name", SchemaBuilder.string().optional().build());
     return builder.build();
   }
 
@@ -206,6 +221,26 @@ public class ProtobufDataTest {
     } else if (expectedSchema.type() == Schema.Type.ARRAY) {
       assertSchemasEqual(expectedSchema.valueSchema(), actualSchema.valueSchema());
     }
+  }
+
+  private List<String> getFieldNames(Schema schema) {
+    return schema
+      .fields()
+      .stream()
+      .map(field -> field.name())
+      .collect(Collectors.toList());
+  }
+
+  @Test
+  public void testToConnectDataWithLegacyName() throws ParseException {
+    TestMessage message = createLegacyTestProto();
+    ProtobufData protobufData = new ProtobufData(TestMessage.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    List<String> actualFieldNames = getFieldNames(result.schema());
+    List<String> expectedFieldNames = getFieldNames(getLegacyTestSchema());
+
+    assertEquals(expectedFieldNames, actualFieldNames);
   }
 
   @Test
