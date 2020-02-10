@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.blueapron.connect.protobuf";
+
+message First {
+    string value = 1;
+}
+
+message Second {
+    string value = 2;
+}
+
+message OneOfContainer {
+    string metadata = 1;
+    oneof possibilities {
+        First first = 2;
+        Second second = 3;
+    }
+}

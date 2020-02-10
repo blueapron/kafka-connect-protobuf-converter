@@ -1,6 +1,7 @@
 package com.blueapron.connect.protobuf;
 
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
+import com.blueapron.connect.protobuf.OneOfStructs.OneOfContainer;
 import com.blueapron.connect.protobuf.TestMessageProtos.TestMessage;
 import com.blueapron.connect.protobuf.UInt64ValueOuterClass.UInt64Value;
 import com.google.protobuf.BoolValue;
@@ -765,5 +766,13 @@ public class ProtobufDataTest {
 
     ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     byte[] messageBytes = protobufData.fromConnectData(struct);
+  }
+
+  @Test
+  public void testOneOfStructsWithNullField() {
+    OneOfContainer container = OneOfContainer.newBuilder().setMetadata("metadata").build();
+    byte[] bytes = container.toByteArray();
+    ProtobufData protobufData = new ProtobufData(OneOfContainer.class, LEGACY_NAME);
+    SchemaAndValue schemaAndValue = protobufData.toConnectData(bytes);
   }
 }
