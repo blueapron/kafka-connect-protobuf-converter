@@ -11,9 +11,8 @@ message Second {
 }
 
 message OneOfContainer {
-    string metadata = 1;
     oneof possibilities {
-        First first = 2;
-        Second second = 3;
+        First first = 1;
+        Second second = 2;
     }
 }

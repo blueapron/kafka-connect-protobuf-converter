@@ -770,9 +770,11 @@ public class ProtobufDataTest {
 
   @Test
   public void testOneOfStructsWithNullField() {
-    OneOfContainer container = OneOfContainer.newBuilder().setMetadata("metadata").build();
+    OneOfContainer container = OneOfContainer.newBuilder().build();
     byte[] bytes = container.toByteArray();
     ProtobufData protobufData = new ProtobufData(OneOfContainer.class, LEGACY_NAME);
     SchemaAndValue schemaAndValue = protobufData.toConnectData(bytes);
+
+
   }
 }
