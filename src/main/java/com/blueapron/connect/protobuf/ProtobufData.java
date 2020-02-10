@@ -3,11 +3,13 @@ package com.blueapron.connect.protobuf;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
+import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.OneofDescriptor;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import org.apache.kafka.connect.data.Date;
+import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
@@ -18,11 +20,12 @@ import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.errors.DataException;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import com.google.protobuf.util.Timestamps;
@@ -34,13 +37,13 @@ import static com.google.protobuf.Descriptors.FieldDescriptor.Type.ENUM;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.FLOAT;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT64;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.MESSAGE;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT32;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT64;
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.STRING;
 
 
 class ProtobufData {
+  public static final String CONNECT_DECIMAL_PRECISION_PROP = "connect.decimal.precision";
   private final Method newBuilder;
   private final Schema schema;
   private final String legacyName;
@@ -70,7 +73,7 @@ class ProtobufData {
   private String getConnectFieldName(Descriptors.FieldDescriptor descriptor) {
     String name = descriptor.getName();
     for (Map.Entry<Descriptors.FieldDescriptor, Object> option: descriptor.getOptions().getAllFields().entrySet()) {
-      if (option.getKey().getName().equalsIgnoreCase(this.legacyName)) {
+      if (option.getKey().getFullName().equalsIgnoreCase(this.legacyName)) {
         name = option.getValue().toString();
       }
     }
@@ -139,6 +142,10 @@ class ProtobufData {
         builder = SchemaBuilder.int64();
         break;
       }
+
+      case UINT64:
+        builder = Decimal.builder(0).parameter(CONNECT_DECIMAL_PRECISION_PROP, "20");
+        break;
 
       case FLOAT: {
         builder = SchemaBuilder.float32();
@@ -223,8 +230,11 @@ class ProtobufData {
   private void setStructField(Schema schema, Message message, Struct result, Descriptors.FieldDescriptor fieldDescriptor) {
     final String fieldName = getConnectFieldName(fieldDescriptor);
     final Field field = schema.field(fieldName);
-    Object obj = message.getField(fieldDescriptor);
-    result.put(fieldName, toConnectData(field.schema(), obj));
+    Object obj = null;
+    if (fieldDescriptor.getType() != FieldDescriptor.Type.MESSAGE || fieldDescriptor.isRepeated() || fieldDescriptor.isMapField() || message.hasField(fieldDescriptor)) {
+      obj = toConnectData(field.schema(), message.getField(fieldDescriptor));
+    }
+    result.put(fieldName, obj);
   }
 
   Object toConnectData(Schema schema, Object value) {
@@ -309,6 +319,9 @@ class ProtobufData {
             converted = ByteBuffer.wrap(valueBytes);
           } else if (value instanceof ByteBuffer) {
             converted = value;
+          } else if (value instanceof Long){
+            BigInteger unsigned = toUnsigned(BigInteger.valueOf((Long) value), 8);
+            converted = new BigDecimal(unsigned, 0);
           } else {
             throw new DataException("Invalid class for bytes type, expecting byte[], ByteString, "
               + "or ByteBuffer but found " + value.getClass());
@@ -329,9 +342,6 @@ class ProtobufData {
 
         case STRUCT: {
           final Message message = (Message) value; // Validate type
-          if (message == message.getDefaultInstanceForType()) {
-            return null;
-          }
 
           final Struct result = new Struct(schema.schema());
           final Descriptors.Descriptor descriptor = message.getDescriptorForType();
@@ -363,6 +373,11 @@ class ProtobufData {
       throw new DataException("Invalid type for " + schema.type() + ": " + value.getClass());
     }
   }
+
+  private static BigInteger toUnsigned(BigInteger num, int sizeInBytes) {
+    return num.andNot(BigInteger.valueOf(-1).shiftLeft(sizeInBytes * 8));
+  }
+
 
   byte[] fromConnectData(Object value) {
     final com.google.protobuf.GeneratedMessageV3.Builder builder = getBuilder();

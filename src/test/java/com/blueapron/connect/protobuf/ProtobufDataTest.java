@@ -1,6 +1,8 @@
 package com.blueapron.connect.protobuf;
 
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
+import com.blueapron.connect.protobuf.TestMessageProtos.TestMessage;
+import com.blueapron.connect.protobuf.UInt64ValueOuterClass.UInt64Value;
 import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.BytesValue;
@@ -14,7 +16,8 @@ import com.google.protobuf.Message;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
-import org.apache.kafka.connect.data.Date;
+import java.util.stream.Collectors;
+import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
@@ -23,21 +26,25 @@ import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.DataException;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.blueapron.connect.protobuf.ProtobufData.CONNECT_DECIMAL_PRECISION_PROP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 
 public class ProtobufDataTest {
 
-  private final String LEGACY_NAME = "legacy_name";
+  private final String LEGACY_NAME = "blueapron.connect.protobuf.legacy_name";
   private final String VALUE_FIELD_NAME = "value";
+  public static final Schema OPTIONAL_DECIMAL_SCHEMA = Decimal.builder(0).parameter(CONNECT_DECIMAL_PRECISION_PROP, "20").optional().build();
 
   private SchemaAndValue getExpectedSchemaAndValue(Schema fieldSchema, Object value, String name) {
     final SchemaBuilder schemaBuilder = SchemaBuilder.struct().name(name);
@@ -78,6 +85,13 @@ public class ProtobufDataTest {
     return message.build();
   }
 
+  private TestMessage createLegacyTestProto() throws ParseException {
+    return TestMessage.newBuilder()
+      .setTestString("hello")
+      .setSomeField("goodbye")
+      .build();
+  }
+
   private Schema getExpectedNestedTestProtoSchemaStringUserId() {
     return getExpectedNestedTestProtoSchema();
   }
@@ -109,6 +123,13 @@ public class ProtobufDataTest {
     builder.field("status", SchemaBuilder.string().optional().build());
     builder.field("complex_type", getComplexTypeSchemaBuilder().optional().build());
     builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapType").build()).optional().build());
+    return builder.build();
+  }
+
+  private Schema getLegacyTestSchema() {
+    final SchemaBuilder builder = SchemaBuilder.struct().name("TestMessage");
+    builder.field("test_string", SchemaBuilder.string().optional().build());
+    builder.field("legacy_field_name", SchemaBuilder.string().optional().build());
     return builder.build();
   }
 
@@ -200,6 +221,26 @@ public class ProtobufDataTest {
     } else if (expectedSchema.type() == Schema.Type.ARRAY) {
       assertSchemasEqual(expectedSchema.valueSchema(), actualSchema.valueSchema());
     }
+  }
+
+  private List<String> getFieldNames(Schema schema) {
+    return schema
+      .fields()
+      .stream()
+      .map(field -> field.name())
+      .collect(Collectors.toList());
+  }
+
+  @Test
+  public void testToConnectDataWithLegacyName() throws ParseException {
+    TestMessage message = createLegacyTestProto();
+    ProtobufData protobufData = new ProtobufData(TestMessage.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    List<String> actualFieldNames = getFieldNames(result.schema());
+    List<String> expectedFieldNames = getFieldNames(getLegacyTestSchema());
+
+    assertEquals(expectedFieldNames, actualFieldNames);
   }
 
   @Test
@@ -329,6 +370,22 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testToConnectUInt64() {
+    BigDecimal expectedValue = BigDecimal.valueOf(Long.MAX_VALUE).add(BigDecimal.valueOf(1));
+    String expectedName = "UInt64Value";
+
+    UInt64Value.Builder builder = UInt64Value.newBuilder();
+    builder.setValue(expectedValue.longValue());
+    UInt64Value message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(UInt64Value.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    SchemaAndValue expectedSchemaAndValue = getExpectedSchemaAndValue(OPTIONAL_DECIMAL_SCHEMA, expectedValue, expectedName);
+    assertEquals(expectedSchemaAndValue, result);
+  }
+
+  @Test
   public void testToConnectSInt64() {
     Long expectedValue = 12L;
     String expectedName = "SInt64Value";
@@ -396,6 +453,35 @@ public class ProtobufDataTest {
     String expectedName = "TimestampValue";
 
     Timestamp timestamp = Timestamps.fromMillis(expectedValue.getTime());
+    TimestampValueOuterClass.TimestampValue.Builder builder = TimestampValueOuterClass.TimestampValue.newBuilder();
+    builder.setValue(timestamp);
+    TimestampValueOuterClass.TimestampValue message = builder.build();
+
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
+    assertEquals(getExpectedSchemaAndValue(timestampSchema, expectedValue, expectedName), result);
+  }
+
+  @Test
+  public void testToConnectNullTimestamp() {
+    String expectedName = "TimestampValue";
+    TimestampValueOuterClass.TimestampValue message = TimestampValueOuterClass.TimestampValue.getDefaultInstance();
+
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+
+    Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
+    assertEquals(getExpectedSchemaAndValue(timestampSchema, null, expectedName), result);
+  }
+
+  @Test
+  public void testToConnectEpochTimestamp() {
+    java.util.Date expectedValue = java.util.Date.from(Instant.EPOCH);
+    String expectedName = "TimestampValue";
+
+    Timestamp timestamp = Timestamp.getDefaultInstance();
     TimestampValueOuterClass.TimestampValue.Builder builder = TimestampValueOuterClass.TimestampValue.newBuilder();
     builder.setValue(timestamp);
     TimestampValueOuterClass.TimestampValue message = builder.build();

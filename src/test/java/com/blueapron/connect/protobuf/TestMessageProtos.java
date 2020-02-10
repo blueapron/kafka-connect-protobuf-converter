@@ -7,7 +7,6 @@ public final class TestMessageProtos {
   private TestMessageProtos() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
-    registry.add(com.blueapron.connect.protobuf.TestMessageProtos.legacyName);
   }
 
   public static void registerAllExtensions(
@@ -21,20 +20,24 @@ public final class TestMessageProtos {
 
     /**
      * <code>string test_string = 1;</code>
+     * @return The testString.
      */
     java.lang.String getTestString();
     /**
      * <code>string test_string = 1;</code>
+     * @return The bytes for testString.
      */
     com.google.protobuf.ByteString
         getTestStringBytes();
 
     /**
-     * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+     * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+     * @return The someField.
      */
     java.lang.String getSomeField();
     /**
-     * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+     * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+     * @return The bytes for someField.
      */
     com.google.protobuf.ByteString
         getSomeFieldBytes();
@@ -57,6 +60,13 @@ public final class TestMessageProtos {
     }
 
     @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new TestMessage();
+    }
+
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -66,7 +76,9 @@ public final class TestMessageProtos {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -77,13 +89,6 @@ public final class TestMessageProtos {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -94,6 +99,13 @@ public final class TestMessageProtos {
               java.lang.String s = input.readStringRequireUtf8();
 
               someField_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -113,6 +125,7 @@ public final class TestMessageProtos {
       return com.blueapron.connect.protobuf.TestMessageProtos.internal_static_TestMessage_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.TestMessageProtos.internal_static_TestMessage_fieldAccessorTable
@@ -124,6 +137,7 @@ public final class TestMessageProtos {
     private volatile java.lang.Object testString_;
     /**
      * <code>string test_string = 1;</code>
+     * @return The testString.
      */
     public java.lang.String getTestString() {
       java.lang.Object ref = testString_;
@@ -139,6 +153,7 @@ public final class TestMessageProtos {
     }
     /**
      * <code>string test_string = 1;</code>
+     * @return The bytes for testString.
      */
     public com.google.protobuf.ByteString
         getTestStringBytes() {
@@ -157,7 +172,8 @@ public final class TestMessageProtos {
     public static final int SOME_FIELD_FIELD_NUMBER = 2;
     private volatile java.lang.Object someField_;
     /**
-     * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+     * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+     * @return The someField.
      */
     public java.lang.String getSomeField() {
       java.lang.Object ref = someField_;
@@ -172,7 +188,8 @@ public final class TestMessageProtos {
       }
     }
     /**
-     * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+     * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+     * @return The bytes for someField.
      */
     public com.google.protobuf.ByteString
         getSomeFieldBytes() {
@@ -189,6 +206,7 @@ public final class TestMessageProtos {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -198,6 +216,7 @@ public final class TestMessageProtos {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getTestStringBytes().isEmpty()) {
@@ -209,6 +228,7 @@ public final class TestMessageProtos {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -235,13 +255,12 @@ public final class TestMessageProtos {
       }
       com.blueapron.connect.protobuf.TestMessageProtos.TestMessage other = (com.blueapron.connect.protobuf.TestMessageProtos.TestMessage) obj;
 
-      boolean result = true;
-      result = result && getTestString()
-          .equals(other.getTestString());
-      result = result && getSomeField()
-          .equals(other.getSomeField());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!getTestString()
+          .equals(other.getTestString())) return false;
+      if (!getSomeField()
+          .equals(other.getSomeField())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -330,6 +349,7 @@ public final class TestMessageProtos {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -337,6 +357,7 @@ public final class TestMessageProtos {
     public static Builder newBuilder(com.blueapron.connect.protobuf.TestMessageProtos.TestMessage prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -360,6 +381,7 @@ public final class TestMessageProtos {
         return com.blueapron.connect.protobuf.TestMessageProtos.internal_static_TestMessage_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.TestMessageProtos.internal_static_TestMessage_fieldAccessorTable
@@ -382,6 +404,7 @@ public final class TestMessageProtos {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         testString_ = "";
@@ -391,15 +414,18 @@ public final class TestMessageProtos {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.TestMessageProtos.internal_static_TestMessage_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.TestMessageProtos.TestMessage getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.TestMessageProtos.TestMessage.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.TestMessageProtos.TestMessage build() {
         com.blueapron.connect.protobuf.TestMessageProtos.TestMessage result = buildPartial();
         if (!result.isInitialized()) {
@@ -408,6 +434,7 @@ public final class TestMessageProtos {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.TestMessageProtos.TestMessage buildPartial() {
         com.blueapron.connect.protobuf.TestMessageProtos.TestMessage result = new com.blueapron.connect.protobuf.TestMessageProtos.TestMessage(this);
         result.testString_ = testString_;
@@ -416,32 +443,39 @@ public final class TestMessageProtos {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.TestMessageProtos.TestMessage) {
           return mergeFrom((com.blueapron.connect.protobuf.TestMessageProtos.TestMessage)other);
@@ -466,10 +500,12 @@ public final class TestMessageProtos {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -491,6 +527,7 @@ public final class TestMessageProtos {
       private java.lang.Object testString_ = "";
       /**
        * <code>string test_string = 1;</code>
+       * @return The testString.
        */
       public java.lang.String getTestString() {
         java.lang.Object ref = testString_;
@@ -506,6 +543,7 @@ public final class TestMessageProtos {
       }
       /**
        * <code>string test_string = 1;</code>
+       * @return The bytes for testString.
        */
       public com.google.protobuf.ByteString
           getTestStringBytes() {
@@ -522,6 +560,8 @@ public final class TestMessageProtos {
       }
       /**
        * <code>string test_string = 1;</code>
+       * @param value The testString to set.
+       * @return This builder for chaining.
        */
       public Builder setTestString(
           java.lang.String value) {
@@ -535,6 +575,7 @@ public final class TestMessageProtos {
       }
       /**
        * <code>string test_string = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearTestString() {
         
@@ -544,6 +585,8 @@ public final class TestMessageProtos {
       }
       /**
        * <code>string test_string = 1;</code>
+       * @param value The bytes for testString to set.
+       * @return This builder for chaining.
        */
       public Builder setTestStringBytes(
           com.google.protobuf.ByteString value) {
@@ -559,7 +602,8 @@ public final class TestMessageProtos {
 
       private java.lang.Object someField_ = "";
       /**
-       * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+       * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+       * @return The someField.
        */
       public java.lang.String getSomeField() {
         java.lang.Object ref = someField_;
@@ -574,7 +618,8 @@ public final class TestMessageProtos {
         }
       }
       /**
-       * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+       * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+       * @return The bytes for someField.
        */
       public com.google.protobuf.ByteString
           getSomeFieldBytes() {
@@ -590,7 +635,9 @@ public final class TestMessageProtos {
         }
       }
       /**
-       * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+       * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+       * @param value The someField to set.
+       * @return This builder for chaining.
        */
       public Builder setSomeField(
           java.lang.String value) {
@@ -603,7 +650,8 @@ public final class TestMessageProtos {
         return this;
       }
       /**
-       * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+       * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+       * @return This builder for chaining.
        */
       public Builder clearSomeField() {
         
@@ -612,7 +660,9 @@ public final class TestMessageProtos {
         return this;
       }
       /**
-       * <code>string some_field = 2 [(.legacy_name) = "legacy_field_name"];</code>
+       * <code>string some_field = 2 [(.blueapron.connect.protobuf.legacy_name) = "legacy_field_name"];</code>
+       * @param value The bytes for someField to set.
+       * @return This builder for chaining.
        */
       public Builder setSomeFieldBytes(
           com.google.protobuf.ByteString value) {
@@ -625,11 +675,13 @@ public final class TestMessageProtos {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -651,11 +703,12 @@ public final class TestMessageProtos {
 
     private static final com.google.protobuf.Parser<TestMessage>
         PARSER = new com.google.protobuf.AbstractParser<TestMessage>() {
+      @java.lang.Override
       public TestMessage parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new TestMessage(input, extensionRegistry);
+        return new TestMessage(input, extensionRegistry);
       }
     };
 
@@ -668,23 +721,13 @@ public final class TestMessageProtos {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.TestMessageProtos.TestMessage getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
-  public static final int LEGACY_NAME_FIELD_NUMBER = 51234;
-  /**
-   * <code>extend .google.protobuf.FieldOptions { ... }</code>
-   */
-  public static final
-    com.google.protobuf.GeneratedMessage.GeneratedExtension<
-      com.google.protobuf.DescriptorProtos.FieldOptions,
-      java.lang.String> legacyName = com.google.protobuf.GeneratedMessage
-          .newFileScopedGeneratedExtension(
-        java.lang.String.class,
-        null);
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_TestMessage_descriptor;
   private static final 
@@ -700,39 +743,31 @@ public final class TestMessageProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\017TestProto.proto\032 google/protobuf/descr" +
-      "iptor.proto\"M\n\013TestMessage\022\023\n\013test_strin" +
-      "g\030\001 \001(\t\022)\n\nsome_field\030\002 \001(\tB\025\222\202\031\021legacy_" +
-      "field_name:4\n\013legacy_name\022\035.google.proto" +
-      "buf.FieldOptions\030\242\220\003 \001(\tB3\n\036com.blueapro" +
-      "n.connect.protobufB\021TestMessageProtosb\006p" +
-      "roto3"
+      "iptor.proto\032\020LegacyName.proto\"M\n\013TestMes" +
+      "sage\022\023\n\013test_string\030\001 \001(\t\022)\n\nsome_field\030" +
+      "\002 \001(\tB\025\202\246\035\021legacy_field_nameB3\n\036com.blue" +
+      "apron.connect.protobufB\021TestMessageProto" +
+      "sb\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.DescriptorProtos.getDescriptor(),
-        }, assigner);
+          com.blueapron.connect.protobuf.LegacyName.getDescriptor(),
+        });
     internal_static_TestMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_TestMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_TestMessage_descriptor,
         new java.lang.String[] { "TestString", "SomeField", });
-    legacyName.internalInit(descriptor.getExtensions().get(0));
     com.google.protobuf.ExtensionRegistry registry =
         com.google.protobuf.ExtensionRegistry.newInstance();
-    registry.add(com.blueapron.connect.protobuf.TestMessageProtos.legacyName);
+    registry.add(com.blueapron.connect.protobuf.LegacyName.legacyName);
     com.google.protobuf.Descriptors.FileDescriptor
         .internalUpdateFileDescriptor(descriptor, registry);
     com.google.protobuf.DescriptorProtos.getDescriptor();
+    com.blueapron.connect.protobuf.LegacyName.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

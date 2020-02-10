@@ -49,6 +49,8 @@ public final class NestedTestProtoOuterClass {
     }
 
     /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
      * @deprecated Use {@link #forNumber(int)} instead.
      */
     @java.lang.Deprecated
@@ -56,6 +58,10 @@ public final class NestedTestProtoOuterClass {
       return forNumber(value);
     }
 
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
     public static Status forNumber(int value) {
       switch (value) {
         case 0: return ACTIVE;
@@ -118,25 +124,30 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>string ba_com_user_id = 1;</code>
+     * @return The baComUserId.
      */
     java.lang.String getBaComUserId();
     /**
      * <code>string ba_com_user_id = 1;</code>
+     * @return The bytes for baComUserId.
      */
     com.google.protobuf.ByteString
         getBaComUserIdBytes();
 
     /**
      * <code>int32 other_user_id = 2;</code>
+     * @return The otherUserId.
      */
     int getOtherUserId();
 
     /**
      * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     * @return Whether the anotherId field is set.
      */
     boolean hasAnotherId();
     /**
      * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     * @return The anotherId.
      */
     com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId();
     /**
@@ -162,6 +173,13 @@ public final class NestedTestProtoOuterClass {
     }
 
     @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new UserId();
+    }
+
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -171,7 +189,9 @@ public final class NestedTestProtoOuterClass {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -182,13 +202,6 @@ public final class NestedTestProtoOuterClass {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
               userIdCase_ = 1;
@@ -214,6 +227,13 @@ public final class NestedTestProtoOuterClass {
               userIdCase_ = 3;
               break;
             }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -231,6 +251,7 @@ public final class NestedTestProtoOuterClass {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_UserId_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_UserId_fieldAccessorTable
@@ -241,7 +262,8 @@ public final class NestedTestProtoOuterClass {
     private int userIdCase_ = 0;
     private java.lang.Object userId_;
     public enum UserIdCase
-        implements com.google.protobuf.Internal.EnumLite {
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
       BA_COM_USER_ID(1),
       OTHER_USER_ID(2),
       ANOTHER_ID(3),
@@ -251,6 +273,8 @@ public final class NestedTestProtoOuterClass {
         this.value = value;
       }
       /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -281,6 +305,7 @@ public final class NestedTestProtoOuterClass {
     public static final int BA_COM_USER_ID_FIELD_NUMBER = 1;
     /**
      * <code>string ba_com_user_id = 1;</code>
+     * @return The baComUserId.
      */
     public java.lang.String getBaComUserId() {
       java.lang.Object ref = "";
@@ -301,6 +326,7 @@ public final class NestedTestProtoOuterClass {
     }
     /**
      * <code>string ba_com_user_id = 1;</code>
+     * @return The bytes for baComUserId.
      */
     public com.google.protobuf.ByteString
         getBaComUserIdBytes() {
@@ -324,6 +350,7 @@ public final class NestedTestProtoOuterClass {
     public static final int OTHER_USER_ID_FIELD_NUMBER = 2;
     /**
      * <code>int32 other_user_id = 2;</code>
+     * @return The otherUserId.
      */
     public int getOtherUserId() {
       if (userIdCase_ == 2) {
@@ -335,12 +362,14 @@ public final class NestedTestProtoOuterClass {
     public static final int ANOTHER_ID_FIELD_NUMBER = 3;
     /**
      * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     * @return Whether the anotherId field is set.
      */
     public boolean hasAnotherId() {
       return userIdCase_ == 3;
     }
     /**
      * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+     * @return The anotherId.
      */
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId() {
       if (userIdCase_ == 3) {
@@ -359,6 +388,7 @@ public final class NestedTestProtoOuterClass {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -368,6 +398,7 @@ public final class NestedTestProtoOuterClass {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (userIdCase_ == 1) {
@@ -383,6 +414,7 @@ public final class NestedTestProtoOuterClass {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -415,28 +447,25 @@ public final class NestedTestProtoOuterClass {
       }
       com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId other = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId) obj;
 
-      boolean result = true;
-      result = result && getUserIdCase().equals(
-          other.getUserIdCase());
-      if (!result) return false;
+      if (!getUserIdCase().equals(other.getUserIdCase())) return false;
       switch (userIdCase_) {
         case 1:
-          result = result && getBaComUserId()
-              .equals(other.getBaComUserId());
+          if (!getBaComUserId()
+              .equals(other.getBaComUserId())) return false;
           break;
         case 2:
-          result = result && (getOtherUserId()
-              == other.getOtherUserId());
+          if (getOtherUserId()
+              != other.getOtherUserId()) return false;
           break;
         case 3:
-          result = result && getAnotherId()
-              .equals(other.getAnotherId());
+          if (!getAnotherId()
+              .equals(other.getAnotherId())) return false;
           break;
         case 0:
         default:
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -537,6 +566,7 @@ public final class NestedTestProtoOuterClass {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -544,6 +574,7 @@ public final class NestedTestProtoOuterClass {
     public static Builder newBuilder(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -567,6 +598,7 @@ public final class NestedTestProtoOuterClass {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_UserId_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_UserId_fieldAccessorTable
@@ -589,6 +621,7 @@ public final class NestedTestProtoOuterClass {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         userIdCase_ = 0;
@@ -596,15 +629,18 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_UserId_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId build() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId result = buildPartial();
         if (!result.isInitialized()) {
@@ -613,6 +649,7 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId buildPartial() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId result = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId(this);
         if (userIdCase_ == 1) {
@@ -633,32 +670,39 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId) {
           return mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId)other);
@@ -694,10 +738,12 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -733,6 +779,7 @@ public final class NestedTestProtoOuterClass {
 
       /**
        * <code>string ba_com_user_id = 1;</code>
+       * @return The baComUserId.
        */
       public java.lang.String getBaComUserId() {
         java.lang.Object ref = "";
@@ -753,6 +800,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string ba_com_user_id = 1;</code>
+       * @return The bytes for baComUserId.
        */
       public com.google.protobuf.ByteString
           getBaComUserIdBytes() {
@@ -774,6 +822,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string ba_com_user_id = 1;</code>
+       * @param value The baComUserId to set.
+       * @return This builder for chaining.
        */
       public Builder setBaComUserId(
           java.lang.String value) {
@@ -787,6 +837,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string ba_com_user_id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearBaComUserId() {
         if (userIdCase_ == 1) {
@@ -798,6 +849,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string ba_com_user_id = 1;</code>
+       * @param value The bytes for baComUserId to set.
+       * @return This builder for chaining.
        */
       public Builder setBaComUserIdBytes(
           com.google.protobuf.ByteString value) {
@@ -813,6 +866,7 @@ public final class NestedTestProtoOuterClass {
 
       /**
        * <code>int32 other_user_id = 2;</code>
+       * @return The otherUserId.
        */
       public int getOtherUserId() {
         if (userIdCase_ == 2) {
@@ -822,6 +876,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>int32 other_user_id = 2;</code>
+       * @param value The otherUserId to set.
+       * @return This builder for chaining.
        */
       public Builder setOtherUserId(int value) {
         userIdCase_ = 2;
@@ -831,6 +887,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>int32 other_user_id = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOtherUserId() {
         if (userIdCase_ == 2) {
@@ -845,12 +902,14 @@ public final class NestedTestProtoOuterClass {
           com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageIdOrBuilder> anotherIdBuilder_;
       /**
        * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       * @return Whether the anotherId field is set.
        */
       public boolean hasAnotherId() {
         return userIdCase_ == 3;
       }
       /**
        * <code>.blueapron.connect.protobuf.MessageId another_id = 3;</code>
+       * @return The anotherId.
        */
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getAnotherId() {
         if (anotherIdBuilder_ == null) {
@@ -976,11 +1035,13 @@ public final class NestedTestProtoOuterClass {
         onChanged();;
         return anotherIdBuilder_;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1002,11 +1063,12 @@ public final class NestedTestProtoOuterClass {
 
     private static final com.google.protobuf.Parser<UserId>
         PARSER = new com.google.protobuf.AbstractParser<UserId>() {
+      @java.lang.Override
       public UserId parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new UserId(input, extensionRegistry);
+        return new UserId(input, extensionRegistry);
       }
     };
 
@@ -1019,6 +1081,7 @@ public final class NestedTestProtoOuterClass {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -1031,10 +1094,12 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>string id = 1;</code>
+     * @return The id.
      */
     java.lang.String getId();
     /**
      * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     com.google.protobuf.ByteString
         getIdBytes();
@@ -1056,6 +1121,13 @@ public final class NestedTestProtoOuterClass {
     }
 
     @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new MessageId();
+    }
+
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -1065,7 +1137,9 @@ public final class NestedTestProtoOuterClass {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1076,17 +1150,17 @@ public final class NestedTestProtoOuterClass {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
               id_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -1106,6 +1180,7 @@ public final class NestedTestProtoOuterClass {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable
@@ -1117,6 +1192,7 @@ public final class NestedTestProtoOuterClass {
     private volatile java.lang.Object id_;
     /**
      * <code>string id = 1;</code>
+     * @return The id.
      */
     public java.lang.String getId() {
       java.lang.Object ref = id_;
@@ -1132,6 +1208,7 @@ public final class NestedTestProtoOuterClass {
     }
     /**
      * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     public com.google.protobuf.ByteString
         getIdBytes() {
@@ -1148,6 +1225,7 @@ public final class NestedTestProtoOuterClass {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1157,6 +1235,7 @@ public final class NestedTestProtoOuterClass {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getIdBytes().isEmpty()) {
@@ -1165,6 +1244,7 @@ public final class NestedTestProtoOuterClass {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1188,11 +1268,10 @@ public final class NestedTestProtoOuterClass {
       }
       com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId other = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) obj;
 
-      boolean result = true;
-      result = result && getId()
-          .equals(other.getId());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!getId()
+          .equals(other.getId())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -1279,6 +1358,7 @@ public final class NestedTestProtoOuterClass {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -1286,6 +1366,7 @@ public final class NestedTestProtoOuterClass {
     public static Builder newBuilder(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -1309,6 +1390,7 @@ public final class NestedTestProtoOuterClass {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_fieldAccessorTable
@@ -1331,6 +1413,7 @@ public final class NestedTestProtoOuterClass {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         id_ = "";
@@ -1338,15 +1421,18 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_MessageId_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId build() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId result = buildPartial();
         if (!result.isInitialized()) {
@@ -1355,6 +1441,7 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId buildPartial() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId result = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId(this);
         result.id_ = id_;
@@ -1362,32 +1449,39 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId) {
           return mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId)other);
@@ -1408,10 +1502,12 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1433,6 +1529,7 @@ public final class NestedTestProtoOuterClass {
       private java.lang.Object id_ = "";
       /**
        * <code>string id = 1;</code>
+       * @return The id.
        */
       public java.lang.String getId() {
         java.lang.Object ref = id_;
@@ -1448,6 +1545,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string id = 1;</code>
+       * @return The bytes for id.
        */
       public com.google.protobuf.ByteString
           getIdBytes() {
@@ -1464,6 +1562,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string id = 1;</code>
+       * @param value The id to set.
+       * @return This builder for chaining.
        */
       public Builder setId(
           java.lang.String value) {
@@ -1477,6 +1577,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearId() {
         
@@ -1486,6 +1587,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string id = 1;</code>
+       * @param value The bytes for id to set.
+       * @return This builder for chaining.
        */
       public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
@@ -1498,11 +1601,13 @@ public final class NestedTestProtoOuterClass {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1524,11 +1629,12 @@ public final class NestedTestProtoOuterClass {
 
     private static final com.google.protobuf.Parser<MessageId>
         PARSER = new com.google.protobuf.AbstractParser<MessageId>() {
+      @java.lang.Override
       public MessageId parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new MessageId(input, extensionRegistry);
+        return new MessageId(input, extensionRegistry);
       }
     };
 
@@ -1541,6 +1647,7 @@ public final class NestedTestProtoOuterClass {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.MessageId getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -1553,21 +1660,25 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>string one_id = 1;</code>
+     * @return The oneId.
      */
     java.lang.String getOneId();
     /**
      * <code>string one_id = 1;</code>
+     * @return The bytes for oneId.
      */
     com.google.protobuf.ByteString
         getOneIdBytes();
 
     /**
      * <code>int32 other_id = 2;</code>
+     * @return The otherId.
      */
     int getOtherId();
 
     /**
      * <code>bool is_active = 3;</code>
+     * @return The isActive.
      */
     boolean getIsActive();
 
@@ -1586,7 +1697,13 @@ public final class NestedTestProtoOuterClass {
       super(builder);
     }
     private ComplexType() {
-      isActive_ = false;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ComplexType();
     }
 
     @java.lang.Override
@@ -1599,7 +1716,9 @@ public final class NestedTestProtoOuterClass {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1610,13 +1729,6 @@ public final class NestedTestProtoOuterClass {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
               someValCase_ = 1;
@@ -1631,6 +1743,13 @@ public final class NestedTestProtoOuterClass {
             case 24: {
 
               isActive_ = input.readBool();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -1650,6 +1769,7 @@ public final class NestedTestProtoOuterClass {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_ComplexType_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_ComplexType_fieldAccessorTable
@@ -1660,7 +1780,8 @@ public final class NestedTestProtoOuterClass {
     private int someValCase_ = 0;
     private java.lang.Object someVal_;
     public enum SomeValCase
-        implements com.google.protobuf.Internal.EnumLite {
+        implements com.google.protobuf.Internal.EnumLite,
+            com.google.protobuf.AbstractMessage.InternalOneOfEnum {
       ONE_ID(1),
       OTHER_ID(2),
       SOMEVAL_NOT_SET(0);
@@ -1669,6 +1790,8 @@ public final class NestedTestProtoOuterClass {
         this.value = value;
       }
       /**
+       * @param value The number of the enum to look for.
+       * @return The enum associated with the given number.
        * @deprecated Use {@link #forNumber(int)} instead.
        */
       @java.lang.Deprecated
@@ -1698,6 +1821,7 @@ public final class NestedTestProtoOuterClass {
     public static final int ONE_ID_FIELD_NUMBER = 1;
     /**
      * <code>string one_id = 1;</code>
+     * @return The oneId.
      */
     public java.lang.String getOneId() {
       java.lang.Object ref = "";
@@ -1718,6 +1842,7 @@ public final class NestedTestProtoOuterClass {
     }
     /**
      * <code>string one_id = 1;</code>
+     * @return The bytes for oneId.
      */
     public com.google.protobuf.ByteString
         getOneIdBytes() {
@@ -1741,6 +1866,7 @@ public final class NestedTestProtoOuterClass {
     public static final int OTHER_ID_FIELD_NUMBER = 2;
     /**
      * <code>int32 other_id = 2;</code>
+     * @return The otherId.
      */
     public int getOtherId() {
       if (someValCase_ == 2) {
@@ -1753,12 +1879,14 @@ public final class NestedTestProtoOuterClass {
     private boolean isActive_;
     /**
      * <code>bool is_active = 3;</code>
+     * @return The isActive.
      */
     public boolean getIsActive() {
       return isActive_;
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1768,6 +1896,7 @@ public final class NestedTestProtoOuterClass {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (someValCase_ == 1) {
@@ -1783,6 +1912,7 @@ public final class NestedTestProtoOuterClass {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1815,26 +1945,23 @@ public final class NestedTestProtoOuterClass {
       }
       com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType other = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType) obj;
 
-      boolean result = true;
-      result = result && (getIsActive()
-          == other.getIsActive());
-      result = result && getSomeValCase().equals(
-          other.getSomeValCase());
-      if (!result) return false;
+      if (getIsActive()
+          != other.getIsActive()) return false;
+      if (!getSomeValCase().equals(other.getSomeValCase())) return false;
       switch (someValCase_) {
         case 1:
-          result = result && getOneId()
-              .equals(other.getOneId());
+          if (!getOneId()
+              .equals(other.getOneId())) return false;
           break;
         case 2:
-          result = result && (getOtherId()
-              == other.getOtherId());
+          if (getOtherId()
+              != other.getOtherId()) return false;
           break;
         case 0:
         default:
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -1934,6 +2061,7 @@ public final class NestedTestProtoOuterClass {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -1941,6 +2069,7 @@ public final class NestedTestProtoOuterClass {
     public static Builder newBuilder(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -1964,6 +2093,7 @@ public final class NestedTestProtoOuterClass {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_ComplexType_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_ComplexType_fieldAccessorTable
@@ -1986,6 +2116,7 @@ public final class NestedTestProtoOuterClass {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         isActive_ = false;
@@ -1995,15 +2126,18 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_ComplexType_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType build() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType result = buildPartial();
         if (!result.isInitialized()) {
@@ -2012,6 +2146,7 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType buildPartial() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType result = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType(this);
         if (someValCase_ == 1) {
@@ -2026,32 +2161,39 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType) {
           return mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType)other);
@@ -2086,10 +2228,12 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2125,6 +2269,7 @@ public final class NestedTestProtoOuterClass {
 
       /**
        * <code>string one_id = 1;</code>
+       * @return The oneId.
        */
       public java.lang.String getOneId() {
         java.lang.Object ref = "";
@@ -2145,6 +2290,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string one_id = 1;</code>
+       * @return The bytes for oneId.
        */
       public com.google.protobuf.ByteString
           getOneIdBytes() {
@@ -2166,6 +2312,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string one_id = 1;</code>
+       * @param value The oneId to set.
+       * @return This builder for chaining.
        */
       public Builder setOneId(
           java.lang.String value) {
@@ -2179,6 +2327,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string one_id = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOneId() {
         if (someValCase_ == 1) {
@@ -2190,6 +2339,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>string one_id = 1;</code>
+       * @param value The bytes for oneId to set.
+       * @return This builder for chaining.
        */
       public Builder setOneIdBytes(
           com.google.protobuf.ByteString value) {
@@ -2205,6 +2356,7 @@ public final class NestedTestProtoOuterClass {
 
       /**
        * <code>int32 other_id = 2;</code>
+       * @return The otherId.
        */
       public int getOtherId() {
         if (someValCase_ == 2) {
@@ -2214,6 +2366,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>int32 other_id = 2;</code>
+       * @param value The otherId to set.
+       * @return This builder for chaining.
        */
       public Builder setOtherId(int value) {
         someValCase_ = 2;
@@ -2223,6 +2377,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>int32 other_id = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOtherId() {
         if (someValCase_ == 2) {
@@ -2236,12 +2391,15 @@ public final class NestedTestProtoOuterClass {
       private boolean isActive_ ;
       /**
        * <code>bool is_active = 3;</code>
+       * @return The isActive.
        */
       public boolean getIsActive() {
         return isActive_;
       }
       /**
        * <code>bool is_active = 3;</code>
+       * @param value The isActive to set.
+       * @return This builder for chaining.
        */
       public Builder setIsActive(boolean value) {
         
@@ -2251,6 +2409,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>bool is_active = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIsActive() {
         
@@ -2258,11 +2417,13 @@ public final class NestedTestProtoOuterClass {
         onChanged();
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -2284,11 +2445,12 @@ public final class NestedTestProtoOuterClass {
 
     private static final com.google.protobuf.Parser<ComplexType>
         PARSER = new com.google.protobuf.AbstractParser<ComplexType>() {
+      @java.lang.Override
       public ComplexType parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new ComplexType(input, extensionRegistry);
+        return new ComplexType(input, extensionRegistry);
       }
     };
 
@@ -2301,6 +2463,7 @@ public final class NestedTestProtoOuterClass {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -2313,10 +2476,12 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+     * @return Whether the userId field is set.
      */
     boolean hasUserId();
     /**
      * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+     * @return The userId.
      */
     com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getUserId();
     /**
@@ -2326,34 +2491,43 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>bool is_active = 2;</code>
+     * @return The isActive.
      */
     boolean getIsActive();
 
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @return A list containing the experimentsActive.
      */
     java.util.List<java.lang.String>
         getExperimentsActiveList();
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @return The count of experimentsActive.
      */
     int getExperimentsActiveCount();
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @param index The index of the element to return.
+     * @return The experimentsActive at the given index.
      */
     java.lang.String getExperimentsActive(int index);
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the experimentsActive at the given index.
      */
     com.google.protobuf.ByteString
         getExperimentsActiveBytes(int index);
 
     /**
      * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+     * @return Whether the updatedAt field is set.
      */
     boolean hasUpdatedAt();
     /**
      * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+     * @return The updatedAt.
      */
     com.google.protobuf.Timestamp getUpdatedAt();
     /**
@@ -2363,19 +2537,23 @@ public final class NestedTestProtoOuterClass {
 
     /**
      * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+     * @return The enum numeric value on the wire for status.
      */
     int getStatusValue();
     /**
      * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+     * @return The status.
      */
     com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status getStatus();
 
     /**
      * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+     * @return Whether the complexType field is set.
      */
     boolean hasComplexType();
     /**
      * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+     * @return The complexType.
      */
     com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType getComplexType();
     /**
@@ -2434,9 +2612,15 @@ public final class NestedTestProtoOuterClass {
       super(builder);
     }
     private NestedTestProto() {
-      isActive_ = false;
       experimentsActive_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       status_ = 0;
+    }
+
+    @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new NestedTestProto();
     }
 
     @java.lang.Override
@@ -2449,6 +2633,9 @@ public final class NestedTestProtoOuterClass {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -2460,13 +2647,6 @@ public final class NestedTestProtoOuterClass {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId.Builder subBuilder = null;
               if (userId_ != null) {
@@ -2487,9 +2667,9 @@ public final class NestedTestProtoOuterClass {
             }
             case 26: {
               java.lang.String s = input.readStringRequireUtf8();
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 experimentsActive_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000001;
               }
               experimentsActive_.add(s);
               break;
@@ -2527,16 +2707,23 @@ public final class NestedTestProtoOuterClass {
               break;
             }
             case 58: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
                 mapType_ = com.google.protobuf.MapField.newMapField(
                     MapTypeDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000040;
+                mutable_bitField0_ |= 0x00000002;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
               mapType__ = input.readMessage(
                   MapTypeDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               mapType_.getMutableMap().put(
                   mapType__.getKey(), mapType__.getValue());
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -2547,7 +2734,7 @@ public final class NestedTestProtoOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
           experimentsActive_ = experimentsActive_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
@@ -2560,6 +2747,7 @@ public final class NestedTestProtoOuterClass {
     }
 
     @SuppressWarnings({"rawtypes"})
+    @java.lang.Override
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
@@ -2570,6 +2758,7 @@ public final class NestedTestProtoOuterClass {
               "Invalid map field number: " + number);
       }
     }
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_NestedTestProto_fieldAccessorTable
@@ -2577,17 +2766,18 @@ public final class NestedTestProtoOuterClass {
               com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto.class, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto.Builder.class);
     }
 
-    private int bitField0_;
     public static final int USER_ID_FIELD_NUMBER = 1;
     private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId userId_;
     /**
      * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+     * @return Whether the userId field is set.
      */
     public boolean hasUserId() {
       return userId_ != null;
     }
     /**
      * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+     * @return The userId.
      */
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getUserId() {
       return userId_ == null ? com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId.getDefaultInstance() : userId_;
@@ -2603,6 +2793,7 @@ public final class NestedTestProtoOuterClass {
     private boolean isActive_;
     /**
      * <code>bool is_active = 2;</code>
+     * @return The isActive.
      */
     public boolean getIsActive() {
       return isActive_;
@@ -2612,6 +2803,7 @@ public final class NestedTestProtoOuterClass {
     private com.google.protobuf.LazyStringList experimentsActive_;
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @return A list containing the experimentsActive.
      */
     public com.google.protobuf.ProtocolStringList
         getExperimentsActiveList() {
@@ -2619,18 +2811,23 @@ public final class NestedTestProtoOuterClass {
     }
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @return The count of experimentsActive.
      */
     public int getExperimentsActiveCount() {
       return experimentsActive_.size();
     }
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @param index The index of the element to return.
+     * @return The experimentsActive at the given index.
      */
     public java.lang.String getExperimentsActive(int index) {
       return experimentsActive_.get(index);
     }
     /**
      * <code>repeated string experiments_active = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the experimentsActive at the given index.
      */
     public com.google.protobuf.ByteString
         getExperimentsActiveBytes(int index) {
@@ -2641,12 +2838,14 @@ public final class NestedTestProtoOuterClass {
     private com.google.protobuf.Timestamp updatedAt_;
     /**
      * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+     * @return Whether the updatedAt field is set.
      */
     public boolean hasUpdatedAt() {
       return updatedAt_ != null;
     }
     /**
      * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+     * @return The updatedAt.
      */
     public com.google.protobuf.Timestamp getUpdatedAt() {
       return updatedAt_ == null ? com.google.protobuf.Timestamp.getDefaultInstance() : updatedAt_;
@@ -2662,14 +2861,17 @@ public final class NestedTestProtoOuterClass {
     private int status_;
     /**
      * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+     * @return The enum numeric value on the wire for status.
      */
     public int getStatusValue() {
       return status_;
     }
     /**
      * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+     * @return The status.
      */
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status getStatus() {
+      @SuppressWarnings("deprecation")
       com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status result = com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status.valueOf(status_);
       return result == null ? com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status.UNRECOGNIZED : result;
     }
@@ -2678,12 +2880,14 @@ public final class NestedTestProtoOuterClass {
     private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType complexType_;
     /**
      * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+     * @return Whether the complexType field is set.
      */
     public boolean hasComplexType() {
       return complexType_ != null;
     }
     /**
      * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+     * @return The complexType.
      */
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType getComplexType() {
       return complexType_ == null ? com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType.getDefaultInstance() : complexType_;
@@ -2772,6 +2976,7 @@ public final class NestedTestProtoOuterClass {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -2781,6 +2986,7 @@ public final class NestedTestProtoOuterClass {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (userId_ != null) {
@@ -2810,6 +3016,7 @@ public final class NestedTestProtoOuterClass {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -2868,31 +3075,30 @@ public final class NestedTestProtoOuterClass {
       }
       com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto other = (com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto) obj;
 
-      boolean result = true;
-      result = result && (hasUserId() == other.hasUserId());
+      if (hasUserId() != other.hasUserId()) return false;
       if (hasUserId()) {
-        result = result && getUserId()
-            .equals(other.getUserId());
+        if (!getUserId()
+            .equals(other.getUserId())) return false;
       }
-      result = result && (getIsActive()
-          == other.getIsActive());
-      result = result && getExperimentsActiveList()
-          .equals(other.getExperimentsActiveList());
-      result = result && (hasUpdatedAt() == other.hasUpdatedAt());
+      if (getIsActive()
+          != other.getIsActive()) return false;
+      if (!getExperimentsActiveList()
+          .equals(other.getExperimentsActiveList())) return false;
+      if (hasUpdatedAt() != other.hasUpdatedAt()) return false;
       if (hasUpdatedAt()) {
-        result = result && getUpdatedAt()
-            .equals(other.getUpdatedAt());
+        if (!getUpdatedAt()
+            .equals(other.getUpdatedAt())) return false;
       }
-      result = result && status_ == other.status_;
-      result = result && (hasComplexType() == other.hasComplexType());
+      if (status_ != other.status_) return false;
+      if (hasComplexType() != other.hasComplexType()) return false;
       if (hasComplexType()) {
-        result = result && getComplexType()
-            .equals(other.getComplexType());
+        if (!getComplexType()
+            .equals(other.getComplexType())) return false;
       }
-      result = result && internalGetMapType().equals(
-          other.internalGetMapType());
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!internalGetMapType().equals(
+          other.internalGetMapType())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -3002,6 +3208,7 @@ public final class NestedTestProtoOuterClass {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -3009,6 +3216,7 @@ public final class NestedTestProtoOuterClass {
     public static Builder newBuilder(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -3058,6 +3266,7 @@ public final class NestedTestProtoOuterClass {
                 "Invalid map field number: " + number);
         }
       }
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_NestedTestProto_fieldAccessorTable
@@ -3080,6 +3289,7 @@ public final class NestedTestProtoOuterClass {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         if (userIdBuilder_ == null) {
@@ -3091,7 +3301,7 @@ public final class NestedTestProtoOuterClass {
         isActive_ = false;
 
         experimentsActive_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000001);
         if (updatedAtBuilder_ == null) {
           updatedAt_ = null;
         } else {
@@ -3110,15 +3320,18 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.internal_static_blueapron_connect_protobuf_NestedTestProto_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto build() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto result = buildPartial();
         if (!result.isInitialized()) {
@@ -3127,19 +3340,19 @@ public final class NestedTestProtoOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto buildPartial() {
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto result = new com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto(this);
         int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
         if (userIdBuilder_ == null) {
           result.userId_ = userId_;
         } else {
           result.userId_ = userIdBuilder_.build();
         }
         result.isActive_ = isActive_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (((bitField0_ & 0x00000001) != 0)) {
           experimentsActive_ = experimentsActive_.getUnmodifiableView();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000001);
         }
         result.experimentsActive_ = experimentsActive_;
         if (updatedAtBuilder_ == null) {
@@ -3155,37 +3368,43 @@ public final class NestedTestProtoOuterClass {
         }
         result.mapType_ = internalGetMapType();
         result.mapType_.makeImmutable();
-        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto) {
           return mergeFrom((com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto)other);
@@ -3206,7 +3425,7 @@ public final class NestedTestProtoOuterClass {
         if (!other.experimentsActive_.isEmpty()) {
           if (experimentsActive_.isEmpty()) {
             experimentsActive_ = other.experimentsActive_;
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000001);
           } else {
             ensureExperimentsActiveIsMutable();
             experimentsActive_.addAll(other.experimentsActive_);
@@ -3229,10 +3448,12 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3252,17 +3473,19 @@ public final class NestedTestProtoOuterClass {
       }
       private int bitField0_;
 
-      private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId userId_ = null;
+      private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId userId_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserIdOrBuilder> userIdBuilder_;
       /**
        * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+       * @return Whether the userId field is set.
        */
       public boolean hasUserId() {
         return userIdBuilder_ != null || userId_ != null;
       }
       /**
        * <code>.blueapron.connect.protobuf.UserId user_id = 1;</code>
+       * @return The userId.
        */
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.UserId getUserId() {
         if (userIdBuilder_ == null) {
@@ -3372,12 +3595,15 @@ public final class NestedTestProtoOuterClass {
       private boolean isActive_ ;
       /**
        * <code>bool is_active = 2;</code>
+       * @return The isActive.
        */
       public boolean getIsActive() {
         return isActive_;
       }
       /**
        * <code>bool is_active = 2;</code>
+       * @param value The isActive to set.
+       * @return This builder for chaining.
        */
       public Builder setIsActive(boolean value) {
         
@@ -3387,6 +3613,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>bool is_active = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearIsActive() {
         
@@ -3397,13 +3624,14 @@ public final class NestedTestProtoOuterClass {
 
       private com.google.protobuf.LazyStringList experimentsActive_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureExperimentsActiveIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000001) != 0)) {
           experimentsActive_ = new com.google.protobuf.LazyStringArrayList(experimentsActive_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000001;
          }
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @return A list containing the experimentsActive.
        */
       public com.google.protobuf.ProtocolStringList
           getExperimentsActiveList() {
@@ -3411,18 +3639,23 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @return The count of experimentsActive.
        */
       public int getExperimentsActiveCount() {
         return experimentsActive_.size();
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param index The index of the element to return.
+       * @return The experimentsActive at the given index.
        */
       public java.lang.String getExperimentsActive(int index) {
         return experimentsActive_.get(index);
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param index The index of the value to return.
+       * @return The bytes of the experimentsActive at the given index.
        */
       public com.google.protobuf.ByteString
           getExperimentsActiveBytes(int index) {
@@ -3430,6 +3663,9 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param index The index to set the value at.
+       * @param value The experimentsActive to set.
+       * @return This builder for chaining.
        */
       public Builder setExperimentsActive(
           int index, java.lang.String value) {
@@ -3443,6 +3679,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param value The experimentsActive to add.
+       * @return This builder for chaining.
        */
       public Builder addExperimentsActive(
           java.lang.String value) {
@@ -3456,6 +3694,8 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param values The experimentsActive to add.
+       * @return This builder for chaining.
        */
       public Builder addAllExperimentsActive(
           java.lang.Iterable<java.lang.String> values) {
@@ -3467,15 +3707,18 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearExperimentsActive() {
         experimentsActive_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
         return this;
       }
       /**
        * <code>repeated string experiments_active = 3;</code>
+       * @param value The bytes of the experimentsActive to add.
+       * @return This builder for chaining.
        */
       public Builder addExperimentsActiveBytes(
           com.google.protobuf.ByteString value) {
@@ -3489,17 +3732,19 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
-      private com.google.protobuf.Timestamp updatedAt_ = null;
+      private com.google.protobuf.Timestamp updatedAt_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.protobuf.Timestamp, com.google.protobuf.Timestamp.Builder, com.google.protobuf.TimestampOrBuilder> updatedAtBuilder_;
       /**
        * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+       * @return Whether the updatedAt field is set.
        */
       public boolean hasUpdatedAt() {
         return updatedAtBuilder_ != null || updatedAt_ != null;
       }
       /**
        * <code>.google.protobuf.Timestamp updated_at = 4;</code>
+       * @return The updatedAt.
        */
       public com.google.protobuf.Timestamp getUpdatedAt() {
         if (updatedAtBuilder_ == null) {
@@ -3609,12 +3854,15 @@ public final class NestedTestProtoOuterClass {
       private int status_ = 0;
       /**
        * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+       * @return The enum numeric value on the wire for status.
        */
       public int getStatusValue() {
         return status_;
       }
       /**
        * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+       * @param value The enum numeric value on the wire for status to set.
+       * @return This builder for chaining.
        */
       public Builder setStatusValue(int value) {
         status_ = value;
@@ -3623,13 +3871,17 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+       * @return The status.
        */
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status getStatus() {
+        @SuppressWarnings("deprecation")
         com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status result = com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status.valueOf(status_);
         return result == null ? com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status.UNRECOGNIZED : result;
       }
       /**
        * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+       * @param value The status to set.
+       * @return This builder for chaining.
        */
       public Builder setStatus(com.blueapron.connect.protobuf.NestedTestProtoOuterClass.Status value) {
         if (value == null) {
@@ -3642,6 +3894,7 @@ public final class NestedTestProtoOuterClass {
       }
       /**
        * <code>.blueapron.connect.protobuf.Status status = 5;</code>
+       * @return This builder for chaining.
        */
       public Builder clearStatus() {
         
@@ -3650,17 +3903,19 @@ public final class NestedTestProtoOuterClass {
         return this;
       }
 
-      private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType complexType_ = null;
+      private com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType complexType_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType.Builder, com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexTypeOrBuilder> complexTypeBuilder_;
       /**
        * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+       * @return Whether the complexType field is set.
        */
       public boolean hasComplexType() {
         return complexTypeBuilder_ != null || complexType_ != null;
       }
       /**
        * <code>.blueapron.connect.protobuf.ComplexType complex_type = 6;</code>
+       * @return The complexType.
        */
       public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.ComplexType getComplexType() {
         if (complexTypeBuilder_ == null) {
@@ -3889,11 +4144,13 @@ public final class NestedTestProtoOuterClass {
             .putAll(values);
         return this;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -3915,11 +4172,12 @@ public final class NestedTestProtoOuterClass {
 
     private static final com.google.protobuf.Parser<NestedTestProto>
         PARSER = new com.google.protobuf.AbstractParser<NestedTestProto>() {
+      @java.lang.Override
       public NestedTestProto parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new NestedTestProto(input, extensionRegistry);
+        return new NestedTestProto(input, extensionRegistry);
       }
     };
 
@@ -3932,6 +4190,7 @@ public final class NestedTestProtoOuterClass {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -3981,7 +4240,7 @@ public final class NestedTestProtoOuterClass {
       "\001(\t\"R\n\013ComplexType\022\020\n\006one_id\030\001 \001(\tH\000\022\022\n\010" +
       "other_id\030\002 \001(\005H\000\022\021\n\tis_active\030\003 \001(\010B\n\n\010s" +
       "ome_val\"\224\003\n\017NestedTestProto\0223\n\007user_id\030\001" +
-      " \001(\0132\".blueapron.connect.protobuf.UserId",
+      " \001(\0132\".blueapron.connect.protobuf.UserId" +
       "\022\021\n\tis_active\030\002 \001(\010\022\032\n\022experiments_activ" +
       "e\030\003 \003(\t\022.\n\nupdated_at\030\004 \001(\0132\032.google.pro" +
       "tobuf.Timestamp\0222\n\006status\030\005 \001(\0162\".blueap" +
@@ -3991,22 +4250,14 @@ public final class NestedTestProtoOuterClass {
       ".connect.protobuf.NestedTestProto.MapTyp" +
       "eEntry\032.\n\014MapTypeEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
       "alue\030\002 \001(\t:\0028\001*\"\n\006Status\022\n\n\006ACTIVE\020\000\022\014\n\010" +
-      "INACTIVE\020\001B \n\036com.blueapron.connect.prot",
+      "INACTIVE\020\001B \n\036com.blueapron.connect.prot" +
       "obufb\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.TimestampProto.getDescriptor(),
-        }, assigner);
+        });
     internal_static_blueapron_connect_protobuf_UserId_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_blueapron_connect_protobuf_UserId_fieldAccessorTable = new

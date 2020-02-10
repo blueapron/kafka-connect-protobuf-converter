@@ -24,6 +24,7 @@ public final class DateValueOuterClass {
      * </pre>
      *
      * <code>.google.type.Date value = 1;</code>
+     * @return Whether the value field is set.
      */
     boolean hasValue();
     /**
@@ -32,6 +33,7 @@ public final class DateValueOuterClass {
      * </pre>
      *
      * <code>.google.type.Date value = 1;</code>
+     * @return The value.
      */
     com.google.type.Date getValue();
     /**
@@ -63,6 +65,13 @@ public final class DateValueOuterClass {
     }
 
     @java.lang.Override
+    @SuppressWarnings({"unused"})
+    protected java.lang.Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new DateValue();
+    }
+
+    @java.lang.Override
     public final com.google.protobuf.UnknownFieldSet
     getUnknownFields() {
       return this.unknownFields;
@@ -72,7 +81,9 @@ public final class DateValueOuterClass {
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       this();
-      int mutable_bitField0_ = 0;
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -83,13 +94,6 @@ public final class DateValueOuterClass {
             case 0:
               done = true;
               break;
-            default: {
-              if (!parseUnknownFieldProto3(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
             case 10: {
               com.google.type.Date.Builder subBuilder = null;
               if (value_ != null) {
@@ -101,6 +105,13 @@ public final class DateValueOuterClass {
                 value_ = subBuilder.buildPartial();
               }
 
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
               break;
             }
           }
@@ -120,6 +131,7 @@ public final class DateValueOuterClass {
       return com.blueapron.connect.protobuf.DateValueOuterClass.internal_static_DateValue_descriptor;
     }
 
+    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return com.blueapron.connect.protobuf.DateValueOuterClass.internal_static_DateValue_fieldAccessorTable
@@ -135,6 +147,7 @@ public final class DateValueOuterClass {
      * </pre>
      *
      * <code>.google.type.Date value = 1;</code>
+     * @return Whether the value field is set.
      */
     public boolean hasValue() {
       return value_ != null;
@@ -145,6 +158,7 @@ public final class DateValueOuterClass {
      * </pre>
      *
      * <code>.google.type.Date value = 1;</code>
+     * @return The value.
      */
     public com.google.type.Date getValue() {
       return value_ == null ? com.google.type.Date.getDefaultInstance() : value_;
@@ -161,6 +175,7 @@ public final class DateValueOuterClass {
     }
 
     private byte memoizedIsInitialized = -1;
+    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -170,6 +185,7 @@ public final class DateValueOuterClass {
       return true;
     }
 
+    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (value_ != null) {
@@ -178,6 +194,7 @@ public final class DateValueOuterClass {
       unknownFields.writeTo(output);
     }
 
+    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -202,14 +219,13 @@ public final class DateValueOuterClass {
       }
       com.blueapron.connect.protobuf.DateValueOuterClass.DateValue other = (com.blueapron.connect.protobuf.DateValueOuterClass.DateValue) obj;
 
-      boolean result = true;
-      result = result && (hasValue() == other.hasValue());
+      if (hasValue() != other.hasValue()) return false;
       if (hasValue()) {
-        result = result && getValue()
-            .equals(other.getValue());
+        if (!getValue()
+            .equals(other.getValue())) return false;
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -298,6 +314,7 @@ public final class DateValueOuterClass {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -305,6 +322,7 @@ public final class DateValueOuterClass {
     public static Builder newBuilder(com.blueapron.connect.protobuf.DateValueOuterClass.DateValue prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
+    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -332,6 +350,7 @@ public final class DateValueOuterClass {
         return com.blueapron.connect.protobuf.DateValueOuterClass.internal_static_DateValue_descriptor;
       }
 
+      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return com.blueapron.connect.protobuf.DateValueOuterClass.internal_static_DateValue_fieldAccessorTable
@@ -354,6 +373,7 @@ public final class DateValueOuterClass {
                 .alwaysUseFieldBuilders) {
         }
       }
+      @java.lang.Override
       public Builder clear() {
         super.clear();
         if (valueBuilder_ == null) {
@@ -365,15 +385,18 @@ public final class DateValueOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return com.blueapron.connect.protobuf.DateValueOuterClass.internal_static_DateValue_descriptor;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.DateValueOuterClass.DateValue getDefaultInstanceForType() {
         return com.blueapron.connect.protobuf.DateValueOuterClass.DateValue.getDefaultInstance();
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.DateValueOuterClass.DateValue build() {
         com.blueapron.connect.protobuf.DateValueOuterClass.DateValue result = buildPartial();
         if (!result.isInitialized()) {
@@ -382,6 +405,7 @@ public final class DateValueOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public com.blueapron.connect.protobuf.DateValueOuterClass.DateValue buildPartial() {
         com.blueapron.connect.protobuf.DateValueOuterClass.DateValue result = new com.blueapron.connect.protobuf.DateValueOuterClass.DateValue(this);
         if (valueBuilder_ == null) {
@@ -393,32 +417,39 @@ public final class DateValueOuterClass {
         return result;
       }
 
+      @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
+      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
+      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
+      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
+      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
+      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
+      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof com.blueapron.connect.protobuf.DateValueOuterClass.DateValue) {
           return mergeFrom((com.blueapron.connect.protobuf.DateValueOuterClass.DateValue)other);
@@ -438,10 +469,12 @@ public final class DateValueOuterClass {
         return this;
       }
 
+      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
+      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -460,7 +493,7 @@ public final class DateValueOuterClass {
         return this;
       }
 
-      private com.google.type.Date value_ = null;
+      private com.google.type.Date value_;
       private com.google.protobuf.SingleFieldBuilderV3<
           com.google.type.Date, com.google.type.Date.Builder, com.google.type.DateOrBuilder> valueBuilder_;
       /**
@@ -469,6 +502,7 @@ public final class DateValueOuterClass {
        * </pre>
        *
        * <code>.google.type.Date value = 1;</code>
+       * @return Whether the value field is set.
        */
       public boolean hasValue() {
         return valueBuilder_ != null || value_ != null;
@@ -479,6 +513,7 @@ public final class DateValueOuterClass {
        * </pre>
        *
        * <code>.google.type.Date value = 1;</code>
+       * @return The value.
        */
       public com.google.type.Date getValue() {
         if (valueBuilder_ == null) {
@@ -612,11 +647,13 @@ public final class DateValueOuterClass {
         }
         return valueBuilder_;
       }
+      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFieldsProto3(unknownFields);
+        return super.setUnknownFields(unknownFields);
       }
 
+      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -638,11 +675,12 @@ public final class DateValueOuterClass {
 
     private static final com.google.protobuf.Parser<DateValue>
         PARSER = new com.google.protobuf.AbstractParser<DateValue>() {
+      @java.lang.Override
       public DateValue parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new DateValue(input, extensionRegistry);
+        return new DateValue(input, extensionRegistry);
       }
     };
 
@@ -655,6 +693,7 @@ public final class DateValueOuterClass {
       return PARSER;
     }
 
+    @java.lang.Override
     public com.blueapron.connect.protobuf.DateValueOuterClass.DateValue getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -680,19 +719,11 @@ public final class DateValueOuterClass {
       "ype.DateB \n\036com.blueapron.connect.protob" +
       "ufb\006proto3"
     };
-    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
-          public com.google.protobuf.ExtensionRegistry assignDescriptors(
-              com.google.protobuf.Descriptors.FileDescriptor root) {
-            descriptor = root;
-            return null;
-          }
-        };
-    com.google.protobuf.Descriptors.FileDescriptor
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.type.DateProto.getDescriptor(),
-        }, assigner);
+        });
     internal_static_DateValue_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_DateValue_fieldAccessorTable = new
