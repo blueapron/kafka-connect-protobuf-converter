@@ -1,6 +1,7 @@
 package com.blueapron.connect.protobuf;
 
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
+import com.blueapron.connect.protobuf.OneOfStructs.First;
 import com.blueapron.connect.protobuf.OneOfStructs.OneOfContainer;
 import com.blueapron.connect.protobuf.TestMessageProtos.TestMessage;
 import com.blueapron.connect.protobuf.UInt64ValueOuterClass.UInt64Value;
@@ -54,7 +55,7 @@ public class ProtobufDataTest {
     Struct expectedResult = new Struct(schema);
     expectedResult.put(VALUE_FIELD_NAME, value);
     return new SchemaAndValue(schema, expectedResult);
-  };
+  }
 
   private StringValue createStringValueMessage(String messageText) {
     StringValue.Builder builder = StringValue.newBuilder();
@@ -769,12 +770,46 @@ public class ProtobufDataTest {
   }
 
   @Test
-  public void testOneOfStructsWithNullField() {
+  public void testOneOfStructsWithNullField() throws Exception {
     OneOfContainer container = OneOfContainer.newBuilder().build();
     byte[] bytes = container.toByteArray();
     ProtobufData protobufData = new ProtobufData(OneOfContainer.class, LEGACY_NAME);
+
     SchemaAndValue schemaAndValue = protobufData.toConnectData(bytes);
+    Schema expectedSchema = getExpectedOneOfStructsSchema();
 
+    assertSchemasEqual(expectedSchema, schemaAndValue.schema());
 
+    Struct actualVal = (Struct) schemaAndValue.value();
+    assertNull(actualVal.get("first"));
+    assertNull(actualVal.get("second"));
+  }
+
+  private Schema getExpectedOneOfStructsSchema() {
+    SchemaBuilder builder = SchemaBuilder.struct().name("OneOfContainer");
+
+    SchemaBuilder firstBuilder = SchemaBuilder.struct().name("First").field("value", Schema.OPTIONAL_STRING_SCHEMA);
+    SchemaBuilder secondBuilder = SchemaBuilder.struct().name("First").field("value", Schema.OPTIONAL_STRING_SCHEMA);
+
+    builder.field("first", firstBuilder.optional().build());
+    builder.field("second", secondBuilder.optional().build());
+
+    return builder.build();
+  }
+
+  @Test
+  public void testToConnectOneOfStructsWithField() {
+    OneOfContainer container = OneOfContainer.newBuilder().setFirst(First.newBuilder().setValue("value").build()).build();
+    byte[] bytes = container.toByteArray();
+    ProtobufData protobufData = new ProtobufData(OneOfContainer.class, LEGACY_NAME);
+
+    SchemaAndValue schemaAndValue = protobufData.toConnectData(bytes);
+    Schema expectedSchema = getExpectedOneOfStructsSchema();
+
+    assertSchemasEqual(expectedSchema, schemaAndValue.schema());
+
+    Struct actualVal = (Struct) schemaAndValue.value();
+    assertEquals(((Struct) actualVal.get("first")).get("value"), "value");
+    assertNull(actualVal.get("second"));
   }
 }
