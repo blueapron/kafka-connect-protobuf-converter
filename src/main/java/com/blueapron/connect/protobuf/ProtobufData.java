@@ -7,6 +7,7 @@ import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.OneofDescriptor;
 import com.google.protobuf.GeneratedMessageV3;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
 import org.apache.kafka.connect.data.Date;
 import org.apache.kafka.connect.data.Decimal;
@@ -28,6 +29,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import com.google.protobuf.util.Timestamps;
 
 import static com.google.protobuf.Descriptors.FieldDescriptor.Type.BOOL;
@@ -47,6 +49,7 @@ class ProtobufData {
   private final Method newBuilder;
   private final Schema schema;
   private final String legacyName;
+  private final boolean useConnectSchemaMap;
   public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
   private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
@@ -87,7 +90,12 @@ class ProtobufData {
   }
 
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
+    this(clazz, legacyName, false);
+  }
+
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap ) {
     this.legacyName = legacyName;
+    this.useConnectSchemaMap = useConnectSchemaMap;
 
     try {
       this.newBuilder = clazz.getDeclaredMethod("newBuilder");
@@ -194,6 +202,14 @@ class ProtobufData {
           builder = Date.builder();
           break;
         }
+
+        if (shouldConvertToConnectSchemaMap(descriptor)) {
+          FieldDescriptor keyFieldDescriptor = descriptor.getMessageType().findFieldByName("key");
+          FieldDescriptor valueFieldDescriptor = descriptor.getMessageType().findFieldByName("value");
+          builder = SchemaBuilder.map(toConnectSchema(keyFieldDescriptor), toConnectSchema(valueFieldDescriptor));
+          break;
+        }
+
         String jsonName = descriptor.getJsonName();
         builder = SchemaBuilder.struct().name(jsonName.substring(0, 1).toUpperCase() + jsonName.substring(1));
         for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getMessageType().getFields()) {
@@ -210,13 +226,17 @@ class ProtobufData {
     builder.optional();
     Schema schema = builder.build();
 
-    if (descriptor.isRepeated()) {
+    if (descriptor.isRepeated() && !shouldConvertToConnectSchemaMap(descriptor)) {
       final SchemaBuilder arrayBuilder = SchemaBuilder.array(schema);
       arrayBuilder.optional();
       schema = arrayBuilder.build();
     }
 
     return schema;
+  }
+
+  private boolean shouldConvertToConnectSchemaMap(FieldDescriptor descriptor) {
+    return useConnectSchemaMap && descriptor.isMapField();
   }
 
   private boolean isProtobufTimestamp(Schema schema) {
@@ -337,6 +357,15 @@ class ProtobufData {
             result.add(toConnectData(valueSchema, elem));
           }
           converted = result;
+          break;
+        }
+
+        case MAP: {
+          Collection<MapEntry> original = (Collection<MapEntry>) value;
+          converted = original.stream().collect(Collectors.toMap(
+            entry -> toConnectData(schema.keySchema(), entry.getKey()),
+            entry -> toConnectData(schema.valueSchema(), entry.getValue())
+          ));
           break;
         }
 
