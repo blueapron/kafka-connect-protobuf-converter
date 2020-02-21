@@ -17,7 +17,7 @@ public class ProtobufConverter implements Converter {
   private static final Logger log = LoggerFactory.getLogger(ProtobufConverter.class);
   private static final String PROTO_CLASS_NAME_CONFIG = "protoClassName";
   private static final String LEGACY_NAME_CONFIG = "legacyName";
-  private static final String MAP_CONNECT_SCHEMA_TYPE_CONFIG = "mapConnectSchemaType";
+  private static final String PROTO_MAP_CONVERSION_TYPE = "protoMapConversionType";
   private ProtobufData protobufData;
 
   private boolean isInvalidConfiguration(Object proto, boolean isKey) {
@@ -28,7 +28,7 @@ public class ProtobufConverter implements Converter {
   public void configure(Map<String, ?> configs, boolean isKey) {
     Object legacyName = configs.get(LEGACY_NAME_CONFIG);
     String legacyNameString = legacyName == null ? "legacy_name" : legacyName.toString();
-    boolean useConnectSchemaMap = configs.get(MAP_CONNECT_SCHEMA_TYPE_CONFIG) == "map";
+    boolean useConnectSchemaMap = configs.get(PROTO_MAP_CONVERSION_TYPE) == "map";
 
     Object protoClassName = configs.get(PROTO_CLASS_NAME_CONFIG);
     if (isInvalidConfiguration(protoClassName, isKey)) {

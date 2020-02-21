@@ -87,7 +87,7 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 |string       |STRING             |
 |bytes        |BYTES              |
 |repeated     |ARRAY              |
-|map          |ARRAY of STRUCT    |
+|map          |ARRAY of STRUCT*   |
 
 
 |Protobuf Type|Connect Logical Type|
@@ -96,6 +96,12 @@ key.converter=com.blueapron.connect.protobuf.ProtobufConverter
 |Date         |Date                |
 |uint64       |Decimal             |
 
+\* Protobuf map type fields are converted by default to an Array of Struct, 
+but the converter supports also converting these fields into Connect Schema Map type.
+To enable this conversion mode, set the configuration field `protoMapConversionType` to `map`:
+ ```
+value.converter.protoMapConversionType=map
+```
 
 ## Handling field renames and deletes
 Renaming and removing fields is supported by the proto IDL, but certain output formats (for example, BigQuery) do not
