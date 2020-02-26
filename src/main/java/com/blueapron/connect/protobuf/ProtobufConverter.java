@@ -17,6 +17,7 @@ public class ProtobufConverter implements Converter {
   private static final Logger log = LoggerFactory.getLogger(ProtobufConverter.class);
   private static final String PROTO_CLASS_NAME_CONFIG = "protoClassName";
   private static final String LEGACY_NAME_CONFIG = "legacyName";
+  private static final String PROTO_MAP_CONVERSION_TYPE = "protoMapConversionType";
   private ProtobufData protobufData;
 
   private boolean isInvalidConfiguration(Object proto, boolean isKey) {
@@ -27,6 +28,7 @@ public class ProtobufConverter implements Converter {
   public void configure(Map<String, ?> configs, boolean isKey) {
     Object legacyName = configs.get(LEGACY_NAME_CONFIG);
     String legacyNameString = legacyName == null ? "legacy_name" : legacyName.toString();
+    boolean useConnectSchemaMap = "map".equals(configs.get(PROTO_MAP_CONVERSION_TYPE));
 
     Object protoClassName = configs.get(PROTO_CLASS_NAME_CONFIG);
     if (isInvalidConfiguration(protoClassName, isKey)) {
@@ -40,7 +42,8 @@ public class ProtobufConverter implements Converter {
 
     String protoClassNameString = protoClassName.toString();
     try {
-      protobufData = new ProtobufData(Class.forName(protoClassNameString).asSubclass(com.google.protobuf.GeneratedMessageV3.class), legacyNameString);
+      log.info("Initializing ProtobufData with args: [protoClassName={}, legacyName={}, useConnectSchemaMap={}]", protoClassNameString, legacyNameString, useConnectSchemaMap);
+      protobufData = new ProtobufData(Class.forName(protoClassNameString).asSubclass(com.google.protobuf.GeneratedMessageV3.class), legacyNameString, useConnectSchemaMap);
     } catch (ClassNotFoundException e) {
       throw new ConnectException("Proto class " + protoClassNameString + " not found in the classpath");
     } catch (ClassCastException e) {

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "NestedTestProto.proto";
+package blueapron.connect.protobuf;
+option java_package = "com.blueapron.connect.protobuf";
+
+message ComplexMapType {
+    UserId user_id = 1;
+    map<string, MessageId> user_messages = 2;
+}

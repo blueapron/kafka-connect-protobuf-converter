@@ -1,5 +1,6 @@
 package com.blueapron.connect.protobuf;
 
+import com.blueapron.connect.protobuf.ComplexMapMessage.ComplexMapType;
 import com.blueapron.connect.protobuf.NestedTestProtoOuterClass.NestedTestProto;
 import com.blueapron.connect.protobuf.OneOfStructs.First;
 import com.blueapron.connect.protobuf.OneOfStructs.OneOfContainer;
@@ -18,6 +19,10 @@ import com.google.protobuf.Message;
 import com.google.protobuf.StringValue;
 import com.google.protobuf.Timestamp;
 import com.google.protobuf.util.Timestamps;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Field;
@@ -71,6 +76,14 @@ public class ProtobufDataTest {
     return createNestedTestProto(NestedTestProtoOuterClass.UserId.newBuilder().setOtherUserId(5).build());
   }
 
+  private ComplexMapType createComplexMapType() {
+    ComplexMapType.Builder message = ComplexMapType.newBuilder();
+    message.setUserId(NestedTestProtoOuterClass.UserId.newBuilder().setBaComUserId("complex_user").build());
+    message.putUserMessages("hello", NestedTestProtoOuterClass.MessageId.newBuilder().setId("1234").build());
+    message.putUserMessages("hello2", NestedTestProtoOuterClass.MessageId.newBuilder().setId("5678").build());
+    return message.build();
+  }
+
   private NestedTestProto createNestedTestProto(NestedTestProtoOuterClass.UserId id) throws ParseException {
     NestedTestProto.Builder message = NestedTestProto.newBuilder();
     message.setUserId(id);
@@ -94,6 +107,10 @@ public class ProtobufDataTest {
       .build();
   }
 
+  private Schema getExpectedNestedTestProtoSchemaConnectMap() {
+    return getExpectedNestedTestProtoSchema(true);
+  }
+
   private Schema getExpectedNestedTestProtoSchemaStringUserId() {
     return getExpectedNestedTestProtoSchema();
   }
@@ -110,7 +127,34 @@ public class ProtobufDataTest {
     return complexTypeBuilder;
   }
 
+  private Schema getExpectedComplexMapMessageProtoSchema(boolean useConnectMapType) {
+    final SchemaBuilder builder = SchemaBuilder.struct().name("ComplexMapType");
+    final SchemaBuilder userIdBuilder = SchemaBuilder.struct();
+    userIdBuilder.field("ba_com_user_id", SchemaBuilder.string().optional().build());
+    userIdBuilder.field("other_user_id", SchemaBuilder.int32().optional().build());
+    final SchemaBuilder anotherIdBuilder = SchemaBuilder.struct();
+    anotherIdBuilder.field("id", SchemaBuilder.string().optional().build());
+    userIdBuilder.field("another_id", anotherIdBuilder.optional().name("AnotherId").build());
+    builder.field("user_id", userIdBuilder.optional().name("UserId").build());
+    final SchemaBuilder messageIdBuilder = SchemaBuilder.struct().name("Value").optional();
+    messageIdBuilder.field("id", SchemaBuilder.string().optional().build());
+    if (useConnectMapType) {
+      builder.field("user_messages", SchemaBuilder.map(Schema.OPTIONAL_STRING_SCHEMA, messageIdBuilder.schema()).optional().build());
+    } else {
+      builder.field("user_messages", SchemaBuilder.array(SchemaBuilder.struct()
+        .name("UserMessages")
+        .field("key", Schema.OPTIONAL_STRING_SCHEMA)
+        .field("value", messageIdBuilder.schema()).optional().build())
+        .optional().build());
+    }
+    return builder.build();
+  }
+
   private Schema getExpectedNestedTestProtoSchema() {
+    return getExpectedNestedTestProtoSchema(false);
+  }
+
+  private Schema getExpectedNestedTestProtoSchema(boolean useConnectMapType) {
     final SchemaBuilder builder = SchemaBuilder.struct().name("NestedTestProto");
     final SchemaBuilder userIdBuilder = SchemaBuilder.struct();
     userIdBuilder.field("ba_com_user_id", SchemaBuilder.string().optional().build());
@@ -124,7 +168,11 @@ public class ProtobufDataTest {
     builder.field("updated_at", org.apache.kafka.connect.data.Timestamp.builder().optional().build());
     builder.field("status", SchemaBuilder.string().optional().build());
     builder.field("complex_type", getComplexTypeSchemaBuilder().optional().build());
-    builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapType").build()).optional().build());
+    if (useConnectMapType) {
+      builder.field("map_type", SchemaBuilder.map(Schema.OPTIONAL_STRING_SCHEMA, Schema.OPTIONAL_STRING_SCHEMA).optional().build());
+    } else {
+      builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapType").build()).optional().build());
+    }
     return builder.build();
   }
 
@@ -133,6 +181,38 @@ public class ProtobufDataTest {
     builder.field("test_string", SchemaBuilder.string().optional().build());
     builder.field("legacy_field_name", SchemaBuilder.string().optional().build());
     return builder.build();
+  }
+
+  private Map<String, String> getTestKeyValueMap() {
+    Map<String, String> map = new HashMap<>();
+    map.put("Hello","World");
+    return map;
+  }
+
+  private Map<String, Struct> getTestMapForComplexMap(Schema schema) {
+    Map<String, Struct> map = new HashMap<>();
+    Schema valueSchema = schema.field("user_messages").schema().valueSchema();
+    Struct messageId1 = new Struct(valueSchema).put("id", "1234");
+    Struct messageId2 = new Struct(valueSchema).put("id", "5678");
+    map.put("hello", messageId1);
+    map.put("hello2", messageId2);
+    return map;
+  }
+
+  private List<Struct> getTestKeyValueListForComplexMap(Schema schema) {
+    List<Struct> keyValueList = new LinkedList<>();
+    Struct keyValue = new Struct(schema.field("user_messages").schema().valueSchema());
+    Schema valueSchema = schema.field("user_messages").schema().valueSchema().field("value").schema();
+    Struct messageId1 = new Struct(valueSchema).put("id", "1234");
+    Struct messageId2 = new Struct(valueSchema).put("id", "5678");
+    keyValue.put("key", "hello");
+    keyValue.put("value", messageId1);
+    keyValueList.add(keyValue);
+    keyValue = new Struct(keyValue.schema());
+    keyValue.put("key", "hello2");
+    keyValue.put("value", messageId2);
+    keyValueList.add(keyValue);
+    return keyValueList;
   }
 
   private List<Struct> getTestKeyValueList(Schema schema) {
@@ -144,8 +224,22 @@ public class ProtobufDataTest {
     return keyValueList;
   }
 
-  private Struct getExpectedNestedProtoResultStringUserId() throws ParseException {
-    Schema schema = getExpectedNestedTestProtoSchemaStringUserId();
+  private Struct getExpectedComplexMapMessageResult(boolean useConnectMapType) throws ParseException {
+    Schema schema = getExpectedComplexMapMessageProtoSchema(useConnectMapType);
+    Struct result = new Struct(schema.schema());
+    Struct userId = new Struct(schema.field("user_id").schema());
+    userId.put("ba_com_user_id", "complex_user");
+    result.put("user_id", userId);
+    if (useConnectMapType) {
+      result.put("user_messages", getTestMapForComplexMap(schema));
+    } else {
+      result.put("user_messages", getTestKeyValueListForComplexMap(schema));
+    }
+    return result;
+  }
+
+  private Struct getExpectedNestedProtoResultStringUserId(boolean useConnectMapType) throws ParseException {
+    Schema schema = getExpectedNestedTestProtoSchema(useConnectMapType);
     Struct result = new Struct(schema.schema());
     Struct userId = new Struct(schema.field("user_id").schema());
     userId.put("ba_com_user_id", "my_user");
@@ -162,7 +256,12 @@ public class ProtobufDataTest {
     result.put("experiments_active", experiments);
 
     result.put("status", "INACTIVE");
-    result.put("map_type", getTestKeyValueList(schema));
+    if (useConnectMapType) {
+      result.put("map_type", getTestKeyValueMap());
+    } else {
+      result.put("map_type", getTestKeyValueList(schema));
+    }
+
     return result;
   }
 
@@ -222,6 +321,9 @@ public class ProtobufDataTest {
       }
     } else if (expectedSchema.type() == Schema.Type.ARRAY) {
       assertSchemasEqual(expectedSchema.valueSchema(), actualSchema.valueSchema());
+    } else if (expectedSchema.type() == Schema.Type.MAP) {
+      assertSchemasEqual(expectedSchema.keySchema(), actualSchema.keySchema());
+      assertSchemasEqual(expectedSchema.valueSchema(), actualSchema.valueSchema());
     }
   }
 
@@ -246,13 +348,43 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testToConnectDataWithMessageWithSimpleMapField() throws ParseException {
+    NestedTestProto message = createNestedTestProtoStringUserId();
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME, true);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    Schema expectedSchema = getExpectedNestedTestProtoSchemaConnectMap();
+    assertSchemasEqual(expectedSchema, result.schema());
+    assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaConnectMap(), getExpectedNestedProtoResultStringUserId(true)), result);
+  }
+
+  @Test
+  public void testToConnectDataWithMessageWithNestedMapField() throws ParseException {
+    ComplexMapType message = createComplexMapType();
+    ProtobufData protobufData = new ProtobufData(ComplexMapType.class, LEGACY_NAME, true);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    Schema expectedSchema = getExpectedComplexMapMessageProtoSchema(true);
+    assertSchemasEqual(expectedSchema, result.schema());
+    assertEquals(new SchemaAndValue(getExpectedComplexMapMessageProtoSchema(true), getExpectedComplexMapMessageResult(true)), result);
+  }
+
+  @Test
+  public void testToConnectDataWithMessageWithNestedMapFieldListOfStruct() throws ParseException {
+    ComplexMapType message = createComplexMapType();
+    ProtobufData protobufData = new ProtobufData(ComplexMapType.class, LEGACY_NAME);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    Schema expectedSchema = getExpectedComplexMapMessageProtoSchema(false);
+    assertSchemasEqual(expectedSchema, result.schema());
+    assertEquals(new SchemaAndValue(getExpectedComplexMapMessageProtoSchema(false), getExpectedComplexMapMessageResult(false)), result);
+  }
+
+  @Test
   public void testToConnectDataWithNestedProtobufMessageAndStringUserId() throws ParseException {
     NestedTestProto message = createNestedTestProtoStringUserId();
     ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
     SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
     Schema expectedSchema = getExpectedNestedTestProtoSchemaStringUserId();
     assertSchemasEqual(expectedSchema, result.schema());
-    assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaStringUserId(), getExpectedNestedProtoResultStringUserId()), result);
+    assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaStringUserId(), getExpectedNestedProtoResultStringUserId(false)), result);
   }
 
   @Test
