@@ -348,7 +348,9 @@ class ProtobufData {
 
           for (OneofDescriptor oneOfDescriptor : descriptor.getOneofs()) {
             final Descriptors.FieldDescriptor fieldDescriptor = message.getOneofFieldDescriptor(oneOfDescriptor);
-            setStructField(schema, message, result, fieldDescriptor);
+            if (fieldDescriptor != null) {
+              setStructField(schema, message, result, fieldDescriptor);
+            }
           }
 
           for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getFields()) {

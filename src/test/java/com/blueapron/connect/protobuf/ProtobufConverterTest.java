@@ -1,5 +1,6 @@
 package com.blueapron.connect.protobuf;
 
+import com.blueapron.connect.protobuf.OneOfStructs.OneOfContainer;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaAndValue;
 import org.apache.kafka.connect.data.SchemaBuilder;
