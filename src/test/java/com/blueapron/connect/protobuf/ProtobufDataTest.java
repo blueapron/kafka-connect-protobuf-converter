@@ -134,15 +134,15 @@ public class ProtobufDataTest {
     userIdBuilder.field("other_user_id", SchemaBuilder.int32().optional().build());
     final SchemaBuilder anotherIdBuilder = SchemaBuilder.struct();
     anotherIdBuilder.field("id", SchemaBuilder.string().optional().build());
-    userIdBuilder.field("another_id", anotherIdBuilder.optional().name("AnotherId").build());
+    userIdBuilder.field("another_id", anotherIdBuilder.optional().name("MessageId").build());
     builder.field("user_id", userIdBuilder.optional().name("UserId").build());
-    final SchemaBuilder messageIdBuilder = SchemaBuilder.struct().name("Value").optional();
+    final SchemaBuilder messageIdBuilder = SchemaBuilder.struct().name("MessageId").optional();
     messageIdBuilder.field("id", SchemaBuilder.string().optional().build());
     if (useConnectMapType) {
       builder.field("user_messages", SchemaBuilder.map(Schema.OPTIONAL_STRING_SCHEMA, messageIdBuilder.schema()).optional().build());
     } else {
       builder.field("user_messages", SchemaBuilder.array(SchemaBuilder.struct()
-        .name("UserMessages")
+        .name("UserMessagesEntry")
         .field("key", Schema.OPTIONAL_STRING_SCHEMA)
         .field("value", messageIdBuilder.schema()).optional().build())
         .optional().build());
@@ -161,7 +161,7 @@ public class ProtobufDataTest {
     userIdBuilder.field("other_user_id", SchemaBuilder.int32().optional().build());
     final SchemaBuilder messageIdBuilder = SchemaBuilder.struct();
     messageIdBuilder.field("id", SchemaBuilder.string().optional().build());
-    userIdBuilder.field("another_id", messageIdBuilder.optional().name("AnotherId").build());
+    userIdBuilder.field("another_id", messageIdBuilder.optional().name("MessageId").build());
     builder.field("user_id", userIdBuilder.optional().name("UserId").build());
     builder.field("is_active", SchemaBuilder.bool().optional().build());
     builder.field("experiments_active", SchemaBuilder.array(SchemaBuilder.string().optional().build()).optional().build());
@@ -171,7 +171,7 @@ public class ProtobufDataTest {
     if (useConnectMapType) {
       builder.field("map_type", SchemaBuilder.map(Schema.OPTIONAL_STRING_SCHEMA, Schema.OPTIONAL_STRING_SCHEMA).optional().build());
     } else {
-      builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapType").build()).optional().build());
+      builder.field("map_type", SchemaBuilder.array(SchemaBuilder.struct().field("key", Schema.OPTIONAL_STRING_SCHEMA).field("value", Schema.OPTIONAL_STRING_SCHEMA).optional().name("MapTypeEntry").build()).optional().build());
     }
     return builder.build();
   }
