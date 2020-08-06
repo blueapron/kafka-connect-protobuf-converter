@@ -761,6 +761,17 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testFromConnectNullTimestampOptionalField() throws ParseException, InvalidProtocolBufferException {
+    Schema timestampSchema = org.apache.kafka.connect.data.Timestamp.builder().optional().build();
+
+    Struct struct = wrapValueStruct(timestampSchema.schema(), null);
+
+    ProtobufData protobufData = new ProtobufData(TimestampValueOuterClass.TimestampValue.class, "legacy-name");
+    Message message = TimestampValueOuterClass.TimestampValue.parseFrom(protobufData.fromConnectData(struct));
+    assertEquals(0, message.getAllFields().size());
+  }
+
+  @Test
   public void testFromConnectDate() throws ParseException, InvalidProtocolBufferException {
     Schema dateSchema = org.apache.kafka.connect.data.Date.builder().optional().build();
 
@@ -895,6 +906,7 @@ public class ProtobufDataTest {
     java.util.Date value = sdf.parse("2017/09/18");
 
     Struct struct = new Struct(getExpectedNestedTestProtoSchema());
+    struct.put("user_id", NestedTestProtoOuterClass.UserId.newBuilder().setBaComUserId("ba_com_user_id"));
     struct.put("updated_at", value);
 
     ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);

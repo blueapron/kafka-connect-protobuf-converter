@@ -422,6 +422,10 @@ class ProtobufData {
   }
 
   private void fromConnectData(com.google.protobuf.GeneratedMessageV3.Builder builder, Field field, Object value) {
+    if (value == null) {
+      return; // Ignore missing values
+    }
+
     final String protobufFieldName = getProtoFieldName(builder.getDescriptorForType().getFullName(), field.name());
     final Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByName(protobufFieldName);
     if (fieldDescriptor == null) {
