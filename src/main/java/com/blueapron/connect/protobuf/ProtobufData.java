@@ -50,6 +50,10 @@ class ProtobufData {
   private final Schema schema;
   private final String legacyName;
   private final boolean useConnectSchemaMap;
+  // For this PoC, when this is set to true, we assume the byte string field is the actual payload
+  // We need a more flexible way of handling this down the line
+  private final String protoPayloadClassNameString;
+  private final String protoPayloadFieldNameString;
   public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
   private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
@@ -61,9 +65,28 @@ class ProtobufData {
     }
   }
 
+  private GeneratedMessageV3.Builder getPayloadBuilder() {
+    try {
+      final Method newPayloadBuilder = Class.forName(this.protoPayloadClassNameString)
+        .asSubclass(com.google.protobuf.GeneratedMessageV3.class)
+        .getDeclaredMethod("newBuilder");
+      return (GeneratedMessageV3.Builder) newPayloadBuilder.invoke(Object.class);
+    } catch (Exception e) {
+      throw new ConnectException("Not a valid proto3 builder", e);
+    }
+  }
+
   private Message getMessage(byte[] value) {
     try {
       return getBuilder().mergeFrom(value).build();
+    } catch (InvalidProtocolBufferException e) {
+      throw new DataException("Invalid protobuf data", e);
+    }
+  }
+
+  private Message getPayloadMessage(byte[] value) {
+    try {
+      return getPayloadBuilder().mergeFrom(value).build();
     } catch (InvalidProtocolBufferException e) {
       throw new DataException("Invalid protobuf data", e);
     }
@@ -90,12 +113,19 @@ class ProtobufData {
   }
 
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
-    this(clazz, legacyName, false);
+    this(clazz, legacyName, false, "", "");
   }
 
-  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap ) {
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap) {
+    this(clazz, legacyName, useConnectSchemaMap, "", "");
+  }
+
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap,
+               String protoPayloadClassNameString, String protoPayloadFieldNameString) {
     this.legacyName = legacyName;
     this.useConnectSchemaMap = useConnectSchemaMap;
+    this.protoPayloadClassNameString = protoPayloadClassNameString;
+    this.protoPayloadFieldNameString = protoPayloadFieldNameString;
 
     try {
       this.newBuilder = clazz.getDeclaredMethod("newBuilder");
@@ -106,10 +136,30 @@ class ProtobufData {
     this.schema = toConnectSchema(getBuilder().getDefaultInstanceForType());
   }
 
+  private SchemaAndValue wrappedToConnectData(Message message) {
+    // Build schema for payload message
+    final Schema payloadSchema = toConnectSchema(getPayloadBuilder().getDefaultInstanceForType());
+
+    // Find the BYTES field from the wrapper message
+    final Descriptors.Descriptor descriptor = message.getDescriptorForType();
+    Descriptors.FieldDescriptor fieldDescriptor = descriptor.findFieldByName(this.protoPayloadFieldNameString);
+    if (fieldDescriptor == null)
+      return SchemaAndValue.NULL;
+
+    // Actual payload of BYTES type
+    Object payloadField = message.getField(fieldDescriptor);
+
+    Message payloadMessage = getPayloadMessage(((ByteString) payloadField).toByteArray());
+    return new SchemaAndValue(payloadSchema, toConnectData(payloadSchema, payloadMessage));
+  }
+
   SchemaAndValue toConnectData(byte[] value) {
     Message message = getMessage(value);
     if (message == null) {
       return SchemaAndValue.NULL;
+    }
+    if (!this.protoPayloadClassNameString.isEmpty() && !this.protoPayloadFieldNameString.isEmpty()) {
+      return wrappedToConnectData(message);
     }
     return new SchemaAndValue(this.schema, toConnectData(this.schema, message));
   }
@@ -409,16 +459,31 @@ class ProtobufData {
     return num.andNot(BigInteger.valueOf(-1).shiftLeft(sizeInBytes * 8));
   }
 
+  private byte[] wrapperFromConnectData(Struct struct) {
+    byte[] bytes = (byte[]) struct.get(this.protoPayloadFieldNameString);
+
+    Message payloadMessage = getPayloadMessage((ByteString.copyFrom(bytes)).toByteArray());
+
+    return payloadMessage.toByteArray();
+  }
 
   byte[] fromConnectData(Object value) {
-    final com.google.protobuf.GeneratedMessageV3.Builder builder = getBuilder();
     final Struct struct = (Struct) value;
 
+    if (!this.protoPayloadClassNameString.isEmpty() && !this.protoPayloadFieldNameString.isEmpty()) {
+      return wrapperFromConnectData(struct);
+    }
+
+    final com.google.protobuf.GeneratedMessageV3.Builder builder = getBuilder();
     for (Field field : this.schema.fields()) {
       fromConnectData(builder, field, struct.get(field));
     }
 
     return builder.build().toByteArray();
+  }
+
+  Schema getSchema() {
+    return this.schema;
   }
 
   private void fromConnectData(com.google.protobuf.GeneratedMessageV3.Builder builder, Field field, Object value) {

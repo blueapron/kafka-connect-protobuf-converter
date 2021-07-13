@@ -43,8 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.blueapron.connect.protobuf.ProtobufData.CONNECT_DECIMAL_PRECISION_PROP;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 
 public class ProtobufDataTest {
@@ -98,6 +97,18 @@ public class ProtobufDataTest {
     message.setUpdatedAt(timestamp);
     message.putMapType("Hello", "World");
     return message.build();
+  }
+
+  private KafkaMessage createKafkaMessage() throws ParseException {
+    NestedTestProto payloadMessage = createNestedTestProtoStringUserId();
+
+    KafkaMessage wrapperMessage = KafkaMessage.newBuilder()
+      .setEnqueueTime(1000L)
+      .setUuid("uuid")
+      .setMessage(payloadMessage.toByteString())
+      .build();
+
+    return wrapperMessage;
   }
 
   private TestMessage createLegacyTestProto() throws ParseException {
@@ -385,6 +396,53 @@ public class ProtobufDataTest {
     Schema expectedSchema = getExpectedNestedTestProtoSchemaStringUserId();
     assertSchemasEqual(expectedSchema, result.schema());
     assertEquals(new SchemaAndValue(getExpectedNestedTestProtoSchemaStringUserId(), getExpectedNestedProtoResultStringUserId(false)), result);
+  }
+
+  @Test
+  public void testToConnectDataWrappedMessage() throws ParseException {
+    // Create wrapper message (KafkaMessage), actual payload is NestedTestProto message
+    KafkaMessage wrapperMessage = createKafkaMessage();
+
+    Struct s = getExpectedNestedProtoResultStringUserId(false);
+
+    // Decode byte string as payload
+    String protoPayloadClassNameString = "com.blueapron.connect.protobuf.NestedTestProtoOuterClass$NestedTestProto";
+    String protoPayloadFieldNameString = "message";
+    ProtobufData protobufData = new ProtobufData(KafkaMessage.class, LEGACY_NAME, false, protoPayloadClassNameString, protoPayloadFieldNameString);
+    SchemaAndValue result = protobufData.toConnectData(wrapperMessage.toByteArray());
+
+    // Expected payload message schema
+    Schema expectedSchema = getExpectedNestedTestProtoSchemaStringUserId();
+    assertSchemasEqual(expectedSchema, result.schema());
+
+    SchemaAndValue expectedSchemaAndValue = new SchemaAndValue(expectedSchema, getExpectedNestedProtoResultStringUserId(false));
+    assertEquals(expectedSchemaAndValue, result);
+  }
+
+  @Test
+  public void testFromConnectDataWrappedMessage() throws ParseException {
+    // Create wrapper message (KafkaMessage), actual payload is NestedTestProto message
+    KafkaMessage wrapperMessage = createKafkaMessage();
+
+    String protoPayloadClassNameString = "com.blueapron.connect.protobuf.NestedTestProtoOuterClass$NestedTestProto";
+    String protoPayloadFieldNameString = "message";
+
+    ProtobufData protobufData = new ProtobufData(KafkaMessage.class, LEGACY_NAME, false, protoPayloadClassNameString, protoPayloadFieldNameString);
+    Schema schema = protobufData.getSchema();
+
+    Struct struct = new Struct(schema);
+    for (Map.Entry<Descriptors.FieldDescriptor, Object> entry: wrapperMessage.getAllFields().entrySet()) {
+      String name = entry.getKey().getName();
+      Object value = entry.getValue();
+      if (value instanceof ByteString) {
+        value = ((ByteString) value).toByteArray();
+      }
+      struct.put(name, value);
+    }
+
+    byte[] expected = wrapperMessage.getMessage().toByteArray();
+    byte[] result = protobufData.fromConnectData(struct);
+    assertArrayEquals(expected, result);
   }
 
   @Test
