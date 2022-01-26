@@ -1,0 +1,9 @@
+{
+  "description": "Kafka Connect converter plugin to convert input/output from/to protobuf as defined by a proto-file",
+  "topics": ["kafka-connect","kafka","protobuf"],
+  "extraChecks": [],
+  "enableIssues": true,
+  "enableWiki": false,
+  "enableProjects": false,
+  "maintainers": ["Platform Services - Network"]
+}

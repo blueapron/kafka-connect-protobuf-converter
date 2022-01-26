@@ -1,0 +1,16 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: Kafka Connect - Protobuf Converter
+  description: |
+    Kafka Connect converter plugin to convert input/output from/to protobuf as defined by a proto-file
+  annotations:
+    github.com/project-slug: Tradeshift/kafka-connect-protobuf-converter
+    #sonarqube.org/project-key:  # Name of the project in SonarQube
+  tags:
+    - java
+    - kafka-connect
+spec:
+  type: library
+  owner: bsd
+  lifecycle: production
