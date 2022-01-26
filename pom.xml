@@ -2,19 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.blueapron</groupId>
+    <groupId>com.tradeshift</groupId>
     <artifactId>kafka-connect-protobuf-converter</artifactId>
     <packaging>jar</packaging>
     <version>3.1.1-SNAPSHOT</version>
 
-    <name>com.blueapron:kafka-connect-protobuf-converter</name>
+    <name>Kafka Connect: Protobuf Converter</name>
     <description>Converter plugin for Kafka Connect. A converter controls the format of the data
         that will be written to Kafka for source connectors or read from Kafka for sink connectors.</description>
-    <url>https://github.com/blueapron/kafka-connect-protobuf-converter</url>
+    <url>https://github.com/Tradeshift/kafka-connect-protobuf-converter</url>
 
     <organization>
-        <url>https://www.blueapron.com/</url>
-        <name>Blue Apron</name>
+        <url>https://www.tradeshift.com/</url>
+        <name>Tradeshift</name>
     </organization>
 
     <properties>
@@ -25,13 +25,13 @@
 
     <issueManagement>
         <system>github</system>
-        <url>https://github.com/blueapron/kafka-connect-protobuf-converter/issues</url>
+        <url>https://github.com/Tradeshift/kafka-connect-protobuf-converter/issues</url>
     </issueManagement>
 
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <url>https://www.opensource.org/licenses/mit-license.php</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -50,9 +50,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/blueapron/kafka-connect-protobuf-converter.git</connection>
-        <developerConnection>scm:git:git@github.com:blueapron/kafka-connect-protobuf-converter.git</developerConnection>
-        <url>https://github.com/blueapron/kafka-connect-protobuf-converter/tree/master</url>
+        <connection>scm:git:git://github.com/Tradeshift/kafka-connect-protobuf-converter.git</connection>
+        <developerConnection>scm:git:git@github.com:Tradeshift/kafka-connect-protobuf-converter.git</developerConnection>
+        <url>https://github.com/Tradeshift/kafka-connect-protobuf-converter/tree/master</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -222,13 +222,14 @@
                         <configuration>
                             <title>Kafka Connect Protobuf Converter</title>
                             <documentationUrl>
-                                https://github.com/blueapron/kafka-connect-protobuf-converter/blob/master/README.md
+                                https://github.com/Tradeshift/kafka-connect-protobuf-converter/blob/master/README.md
                             </documentationUrl>
                             <description>Proto3 converter for Kafka Connect.</description>
-                            <ownerUsername>blueapron</ownerUsername>
+                            <!-- should not currently exist, but let's assume we eventually want to publish this-->
+                            <ownerUsername>tradeshift</ownerUsername>
                             <ownerType>organization</ownerType>
-                            <ownerName>Blue Apron, LLC.</ownerName>
-                            <ownerUrl>https://www.blueapron.com/</ownerUrl>
+                            <ownerName>Tradeshift, Inc.</ownerName>
+                            <ownerUrl>https://www.tradeshift.com/</ownerUrl>
                             <componentTypes>
                                 <componentType>converter</componentType>
                             </componentTypes>
@@ -239,8 +240,7 @@
                                 <tag>converter</tag>
                             </tags>
                             <supportUrl>${project.issueManagement.url}</supportUrl>
-                            <supportSummary>Support provided through community involvement.
-                            </supportSummary>
+                            <supportSummary>Support provided through community involvement.</supportSummary>
                         </configuration>
                     </execution>
                 </executions>

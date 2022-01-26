@@ -1,3 +1,6 @@
+> :trident: This was forked from [Blue Apron](https://github.com/blueapron/kafka-connect-protobuf-converter) which 
+> appears to no-longer be maintained.
+
 # kafka-connect-protobuf-converter
 Converter plugin for [Kafka Connect](https://docs.confluent.io/current/connect/). A converter
 controls the format of the data that will be written to Kafka for source connectors or
