@@ -5,7 +5,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.OneofDescriptor;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.GeneratedMessageV3.Builder;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.MapEntry;
 import com.google.protobuf.Message;
@@ -32,17 +32,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import com.google.protobuf.util.Timestamps;
 
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.BOOL;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.BYTES;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.DOUBLE;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.ENUM;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.FLOAT;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT32;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.INT64;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT32;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.SINT64;
-import static com.google.protobuf.Descriptors.FieldDescriptor.Type.STRING;
-
 
 class ProtobufData {
   public static final String CONNECT_DECIMAL_PRECISION_PROP = "connect.decimal.precision";
@@ -50,12 +39,11 @@ class ProtobufData {
   private final Schema schema;
   private final String legacyName;
   private final boolean useConnectSchemaMap;
-  public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
-  private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
+  private final HashMap<String, String> connectProtoNameMap = new HashMap<>();
 
-  private GeneratedMessageV3.Builder getBuilder() {
+  private Builder<?> getBuilder() {
     try {
-      return (GeneratedMessageV3.Builder) newBuilder.invoke(Object.class);
+      return (Builder<?>) newBuilder.invoke(Object.class);
     } catch (Exception e) {
       throw new ConnectException("Not a valid proto3 builder", e);
     }
@@ -181,15 +169,12 @@ class ProtobufData {
         break;*/
 
       case STRING:
+      case ENUM:
         builder = SchemaBuilder.string();
         break;
 
       case BYTES:
         builder = SchemaBuilder.bytes();
-        break;
-
-      case ENUM:
-        builder = SchemaBuilder.string();
         break;
 
       case MESSAGE: {
@@ -269,7 +254,7 @@ class ProtobufData {
         return ProtobufUtils.convertFromGoogleDate(date);
       }
 
-      Object converted = null;
+      Object converted;
       switch (schema.type()) {
         // Pass through types
         case INT32: {
@@ -340,7 +325,7 @@ class ProtobufData {
           } else if (value instanceof ByteBuffer) {
             converted = value;
           } else if (value instanceof Long){
-            BigInteger unsigned = toUnsigned(BigInteger.valueOf((Long) value), 8);
+            BigInteger unsigned = toUnsigned(BigInteger.valueOf((Long) value));
             converted = new BigDecimal(unsigned, 0);
           } else {
             throw new DataException("Invalid class for bytes type, expecting byte[], ByteString, "
@@ -405,13 +390,13 @@ class ProtobufData {
     }
   }
 
-  private static BigInteger toUnsigned(BigInteger num, int sizeInBytes) {
-    return num.andNot(BigInteger.valueOf(-1).shiftLeft(sizeInBytes * 8));
+  private static BigInteger toUnsigned(BigInteger num) {
+    return num.andNot(BigInteger.valueOf(-1).shiftLeft(8 * 8));
   }
 
 
   byte[] fromConnectData(Object value) {
-    final com.google.protobuf.GeneratedMessageV3.Builder builder = getBuilder();
+    final Builder<?> builder = getBuilder();
     final Struct struct = (Struct) value;
 
     for (Field field : this.schema.fields()) {
@@ -421,7 +406,25 @@ class ProtobufData {
     return builder.build().toByteArray();
   }
 
-  private void fromConnectData(com.google.protobuf.GeneratedMessageV3.Builder builder, Field field, Object value) {
+  byte[] fromConnectDataByName(Object value) {
+    final Builder<?> builder = getBuilder();
+    final Struct struct = (Struct) value;
+
+    for (Field field : schema.fields()) {
+      final Object fieldValue;
+      try {
+        fieldValue = struct.get(field.name());
+      } catch (DataException e) {
+        throw new DataException("Unable to find field [" + field.name() + "] in kafka connect struct with fields: " +
+          struct.schema().fields().stream().map(Field::name).collect(Collectors.joining(", ")));
+      }
+      fromConnectData(builder, field, fieldValue);
+    }
+
+    return builder.build().toByteArray();
+  }
+
+  public void fromConnectData(Builder<?> builder, Field field, Object value) {
     final String protobufFieldName = getProtoFieldName(builder.getDescriptorForType().getFullName(), field.name());
     final Descriptors.FieldDescriptor fieldDescriptor = builder.getDescriptorForType().findFieldByName(protobufFieldName);
     if (fieldDescriptor == null) {
@@ -483,17 +486,21 @@ class ProtobufData {
         }
 
         case BYTES: {
-          final ByteBuffer bytesValue = value instanceof byte[] ? ByteBuffer.wrap((byte[]) value) :
-            (ByteBuffer) value;
-          builder.setField(fieldDescriptor, ByteString.copyFrom(bytesValue));
+          if (Decimal.LOGICAL_NAME.equals(schema.name())) {
+            builder.setField(fieldDescriptor, value);
+          } else if (value instanceof byte[]) {
+            builder.setField(fieldDescriptor, ByteString.copyFrom(ByteBuffer.wrap((byte[]) value)));
+          } else {
+            builder.setField(fieldDescriptor, ByteString.copyFrom((ByteBuffer) value));
+          }
           return;
         }
 
         default:
           throw new DataException("Unknown schema type: " + schema.type());
       }
-    } catch (ClassCastException e) {
-      throw new DataException("Invalid type for " + schema.type() + ": " + value.getClass());
+    } catch (ClassCastException | IllegalArgumentException e) {
+        throw new DataException("Invalid type for field [" + field.name() +  "] with schema " + schema + ": " + value.getClass(), e);
     }
   }
 }

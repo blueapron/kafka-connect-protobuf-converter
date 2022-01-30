@@ -1,0 +1,46 @@
+syntax = "proto2";
+package dto;
+
+option java_package = "com.tradeshift.backend.journal";
+
+/**
+ * A 128-bit id, transferred as two 64-bit longs
+ */
+message UUID {
+    required fixed64 least_significant_bits = 1;
+    required fixed64 most_significant_bits = 2;
+}
+
+/**
+ * Generic wrapper envelope that is returned when querying the event journal.
+ */
+message EventEnvelope {
+    /**
+     * The UUID of the aggregate for which an event has been emitted. This is the UUID of the company,
+     * document, role, or other, that is affected by the edit.
+     *
+     * The word "aggregate" stems from Domain-Driven Design: It's the unit of change that the event affects,
+     * and that is atomically affected by this event, and not affected until further events arrive.
+     */
+    optional string aggregateId = 1;
+
+    /**
+     * The sequence number (within the aggregate) of this this event. Event sequence numbers are monotonically
+     * increasing per aggregateId. Hence, the combination of (aggregateId, sequenceNr) is unique.
+     */
+    optional uint64 sequenceNr = 2;
+
+    /**
+     * The timestamp, in milliseconds since the epoch, when this event was written to the event journal. This
+     * is not necessarily the same as the timestamp in which the change inside the event actually took place
+     * in the real world; specifically for imported events (that happened before we had an event journal),
+     * there may be a big difference.
+     */
+    optional uint64 timestamp = 3;
+
+    /**
+     * The event content itself, in protobuf format, according to one of the journal-specific event protobuf
+     * definitions.
+     */
+    optional bytes event = 4;
+}

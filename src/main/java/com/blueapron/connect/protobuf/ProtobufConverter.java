@@ -9,45 +9,59 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+import com.google.protobuf.GeneratedMessageV3;
+
 
 /**
  * Implementation of Converter that uses Protobufs.
  */
 public class ProtobufConverter implements Converter {
   private static final Logger log = LoggerFactory.getLogger(ProtobufConverter.class);
-  private static final String PROTO_CLASS_NAME_CONFIG = "protoClassName";
-  private static final String LEGACY_NAME_CONFIG = "legacyName";
-  private static final String PROTO_MAP_CONVERSION_TYPE = "protoMapConversionType";
-  private ProtobufData protobufData;
 
-  private boolean isInvalidConfiguration(Object proto, boolean isKey) {
-    return proto == null && !isKey;
+  private static final String CONFIG_PROTO_CLASS_NAME = "protoClassName";
+  private static final String CONFIG_LEGACY_FIELD_NAME = "legacyName";
+  private static final String CONFIG_PROTO_MAP_CONVERSION_TYPE = "protoMapConversionType";
+  private static final String CONFIG_MAP_FIELDS_BY = "mapFieldsBy";
+
+  private enum MapBy {
+    INDEX, NAME
   }
+
+  private ProtobufData protobufData;
+  private boolean mapByName;
 
   @Override
   public void configure(Map<String, ?> configs, boolean isKey) {
-    Object legacyName = configs.get(LEGACY_NAME_CONFIG);
-    String legacyNameString = legacyName == null ? "legacy_name" : legacyName.toString();
-    boolean useConnectSchemaMap = "map".equals(configs.get(PROTO_MAP_CONVERSION_TYPE));
+    String legacyName = (String) configs.get(CONFIG_LEGACY_FIELD_NAME);
+    legacyName = legacyName == null ? "legacy_name" : legacyName; //Because you cannot do getOrDefault on a Map<String, ?>
 
-    Object protoClassName = configs.get(PROTO_CLASS_NAME_CONFIG);
-    if (isInvalidConfiguration(protoClassName, isKey)) {
-      throw new ConnectException("Value converter must have a " + PROTO_CLASS_NAME_CONFIG + " configured");
-    }
+    //The possible values for this config-property are not documented
+    boolean useConnectSchemaMap = "map".equals(configs.get(CONFIG_PROTO_MAP_CONVERSION_TYPE));
 
+    String protoClassName = (String) configs.get(CONFIG_PROTO_CLASS_NAME);
     if (protoClassName == null) {
-      protobufData = null;
-      return;
+      if (isKey) {
+        return;
+      } else {
+        throw new ConnectException("Value converter must have a " + CONFIG_PROTO_CLASS_NAME + " configured");
+      }
     }
 
-    String protoClassNameString = protoClassName.toString();
+    if (configs.containsKey(CONFIG_MAP_FIELDS_BY)) {
+      MapBy mapBy = MapBy.valueOf((String) configs.get(CONFIG_MAP_FIELDS_BY));
+      mapByName = mapBy == MapBy.NAME;
+    } else {
+      mapByName = false;
+    }
+
     try {
-      log.info("Initializing ProtobufData with args: [protoClassName={}, legacyName={}, useConnectSchemaMap={}]", protoClassNameString, legacyNameString, useConnectSchemaMap);
-      protobufData = new ProtobufData(Class.forName(protoClassNameString).asSubclass(com.google.protobuf.GeneratedMessageV3.class), legacyNameString, useConnectSchemaMap);
+      log.info("Initializing ProtobufData with args: [protoClassName={}, legacyName={}, useConnectSchemaMap={}]",
+        protoClassName, legacyName, useConnectSchemaMap);
+      protobufData = new ProtobufData(Class.forName(protoClassName).asSubclass(GeneratedMessageV3.class), legacyName, useConnectSchemaMap);
     } catch (ClassNotFoundException e) {
-      throw new ConnectException("Proto class " + protoClassNameString + " not found in the classpath");
+      throw new ConnectException("Proto class " + protoClassName + " not found in the classpath");
     } catch (ClassCastException e) {
-      throw new ConnectException("Proto class " + protoClassNameString + " is not a valid proto3 message class");
+      throw new ConnectException("Proto class " + protoClassName + " is not a valid proto3 message class");
     }
   }
 
@@ -57,7 +71,11 @@ public class ProtobufConverter implements Converter {
       return null;
     }
 
-    return protobufData.fromConnectData(value);
+    if (mapByName) {
+      return protobufData.fromConnectDataByName(value);
+    } else {
+      return protobufData.fromConnectData(value);
+    }
   }
 
   @Override
