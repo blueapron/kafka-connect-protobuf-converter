@@ -17,7 +17,7 @@ jobs:
       - id: install-secret-key
         name: Install gpg secret key
         run: |
-          cat <(echo -e "${{ secrets.gpg-key }}") | gpg --batch --import
+          cat <(echo -e "${{ secrets.TRADESHIFTCI_GPG_KEY }}") | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Run Maven
