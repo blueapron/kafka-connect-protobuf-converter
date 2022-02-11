@@ -14,21 +14,11 @@ jobs:
         with:
           java-version: 1.8
 
-      - name: Set up commit signing w/ GPG
-        id: gpg
+      - id: install-secret-key
+        name: Install gpg secret key
         run: |
-          KEYDIR=$(mktemp -d)
-          KEYFILE="${KEYDIR}/key.asc"
-          echo "$GPG_KEY" > "${KEYFILE}"
-          GPG_SHORTID=$(gpg --show-keys --keyid-format=long "${KEYFILE}" | grep sec | cut -d/ -f2 | cut -d' ' -f1)
-          gpg --import --batch --yes "${KEYFILE}"
-          git config --global commit.gpgsign true
-          git config --global user.signingkey "${GPG_SHORTID}"
-          # Get the "This User <this@email.com>" of the key:
-          GPG_USER=$(gpg --fingerprint "${GPG_SHORTID}" | sed -n '/^uid/s/.*\]\s//p')
-          echo "::set-output name=user::${GPG_USER}"
-        env:
-          GPG_KEY: ${{ secrets.gpg-key }}
+          cat <(echo -e "${{ secrets.gpg-key }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Run Maven
         run: mvn -B verify
