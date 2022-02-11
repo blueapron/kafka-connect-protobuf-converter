@@ -14,6 +14,7 @@ jobs:
         with:
           java-version: 1.8
 
+# TODO - this should only be part of the master/release-build, as the PR builds do not have access to secrets
       - id: install-secret-key
         name: Install gpg secret key
         run: |
