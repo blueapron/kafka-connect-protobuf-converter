@@ -48,12 +48,13 @@ public class ProtobufConverterTest {
     return getTestMessageResult(messageText, legacyFieldText, LEGACY_FIELD_NAME);
   }
 
-  private ProtobufConverter getConfiguredProtobufConverter(String protobufClassName, boolean isKey, String legacy_name) {
+  private ProtobufConverter getConfiguredProtobufConverter(String protobufClassName, boolean isKey, String legacy_name, boolean skipBadMessages) {
     ProtobufConverter protobufConverter = new ProtobufConverter();
 
     Map<String, Object> configs = new HashMap<String, Object>();
     configs.put("protoClassName", protobufClassName);
     configs.put("legacyName", legacy_name);
+    configs.put("skipBadMessages", skipBadMessages ? "true" : "false");
 
     protobufConverter.configure(configs, isKey);
 
@@ -61,7 +62,7 @@ public class ProtobufConverterTest {
   }
 
   private ProtobufConverter getConfiguredProtobufConverter(String protobufClassName, boolean isKey) {
-    return getConfiguredProtobufConverter(protobufClassName, isKey, CUSTOM_LEGACY_NAME);
+    return getConfiguredProtobufConverter(protobufClassName, isKey, CUSTOM_LEGACY_NAME, false);
   }
 
   @Test(expected = ConnectException.class)
@@ -91,8 +92,8 @@ public class ProtobufConverterTest {
 
     ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, true);
     byte[] result = testMessageConverter.fromConnectData("my-topic",
-                                                          getTestMessageSchema(),
-                                                          getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
+      getTestMessageSchema(),
+      getTestMessageResult(TEST_MSG_STRING, LEGACY_MSG_STRING));
 
     assertArrayEquals(expected, result);
   }
@@ -150,7 +151,7 @@ public class ProtobufConverterTest {
 
   @Test
   public void testToConnectDataForValueWithMismatchedDefaultLegacyName() {
-    ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, false, "legacy_name");
+    ProtobufConverter testMessageConverter = getConfiguredProtobufConverter(TEST_MESSAGE_CLASS_NAME, false, "legacy_name", false);
     SchemaAndValue result = testMessageConverter.toConnectData("my-topic", HELLO_WORLD_MESSAGE.toByteArray());
 
     String unrenamedLegacyFieldName = "some_field";

@@ -686,6 +686,18 @@ public class ProtobufDataTest {
     protobufData.toConnectData(schema, Arrays.asList(1, 2, 3));
   }
 
+  @Test(expected = DataException.class)
+  public void testToConnectNoProtoPayload() {
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME);
+    protobufData.toConnectData("{'hello:'world'}".getBytes());
+  }
+
+  @Test
+  public void testToConnectNoProtoPayloadMuted() {
+    ProtobufData protobufData = new ProtobufData(NestedTestProto.class, LEGACY_NAME, false, true);
+    assertEquals(new SchemaAndValue(null, null), protobufData.toConnectData("{'hello:'world'}".getBytes()));
+  }
+
   private Struct wrapValueStruct(Schema schema, Object value) {
     Schema structSchema = SchemaBuilder.struct().field(VALUE_FIELD_NAME, schema).build();
     Struct struct = new Struct(structSchema.schema());

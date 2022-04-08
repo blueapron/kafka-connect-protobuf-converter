@@ -50,6 +50,7 @@ class ProtobufData {
   private final Schema schema;
   private final String legacyName;
   private final boolean useConnectSchemaMap;
+  private final boolean skipBadMessages;
   public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
   private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
@@ -65,6 +66,12 @@ class ProtobufData {
     try {
       return getBuilder().mergeFrom(value).build();
     } catch (InvalidProtocolBufferException e) {
+      // Can be enabled temporarily to skip messages that cannot
+      // be parsed if some bad data was accidentally published.
+      if (skipBadMessages) {
+        return null;
+      }
+
       throw new DataException("Invalid protobuf data", e);
     }
   }
@@ -90,12 +97,17 @@ class ProtobufData {
   }
 
   ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName) {
-    this(clazz, legacyName, false);
+    this(clazz, legacyName, false, false);
   }
 
-  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap ) {
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap) {
+    this(clazz, legacyName, useConnectSchemaMap, false);
+  }
+
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap, boolean skipBadMessages) {
     this.legacyName = legacyName;
     this.useConnectSchemaMap = useConnectSchemaMap;
+    this.skipBadMessages = skipBadMessages;
 
     try {
       this.newBuilder = clazz.getDeclaredMethod("newBuilder");
