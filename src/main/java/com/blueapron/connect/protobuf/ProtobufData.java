@@ -210,8 +210,7 @@ class ProtobufData {
           break;
         }
 
-        String jsonName = descriptor.getJsonName();
-        builder = SchemaBuilder.struct().name(jsonName.substring(0, 1).toUpperCase() + jsonName.substring(1));
+        builder = SchemaBuilder.struct().name(descriptor.getMessageType().getName());
         for (Descriptors.FieldDescriptor fieldDescriptor : descriptor.getMessageType().getFields()) {
           builder.field(getConnectFieldName(fieldDescriptor), toConnectSchema(fieldDescriptor));
         }
