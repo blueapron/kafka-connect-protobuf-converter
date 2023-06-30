@@ -50,6 +50,7 @@ class ProtobufData {
   private final Schema schema;
   private final String legacyName;
   private final boolean useConnectSchemaMap;
+  private final boolean useCamelCase;
   public static final Descriptors.FieldDescriptor.Type[] PROTO_TYPES_WITH_DEFAULTS = new Descriptors.FieldDescriptor.Type[] { INT32, INT64, SINT32, SINT64, FLOAT, DOUBLE, BOOL, STRING, BYTES, ENUM };
   private HashMap<String, String> connectProtoNameMap = new HashMap<String, String>();
 
@@ -74,7 +75,7 @@ class ProtobufData {
   }
 
   private String getConnectFieldName(Descriptors.FieldDescriptor descriptor) {
-    String name = descriptor.getName();
+    String name = useCamelCase ? descriptor.getJsonName() : descriptor.getName();
     for (Map.Entry<Descriptors.FieldDescriptor, Object> option: descriptor.getOptions().getAllFields().entrySet()) {
       if (option.getKey().getFullName().equalsIgnoreCase(this.legacyName)) {
         name = option.getValue().toString();
@@ -93,9 +94,14 @@ class ProtobufData {
     this(clazz, legacyName, false);
   }
 
-  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap ) {
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap) {
+    this(clazz, legacyName, useConnectSchemaMap, false);
+  }
+
+  ProtobufData(Class<? extends com.google.protobuf.GeneratedMessageV3> clazz, String legacyName, boolean useConnectSchemaMap, boolean useCamelCase) {
     this.legacyName = legacyName;
     this.useConnectSchemaMap = useConnectSchemaMap;
+    this.useCamelCase = useCamelCase;
 
     try {
       this.newBuilder = clazz.getDeclaredMethod("newBuilder");

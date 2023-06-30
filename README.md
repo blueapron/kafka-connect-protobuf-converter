@@ -105,6 +105,14 @@ To enable this conversion mode, set the configuration field `protoMapConversionT
 value.converter.protoMapConversionType=map
 ```
 
+\* Protobuf field names are left unchanged by default, but `fieldNameConversionType` can be 
+set to `json` to use the JSON (or camel-case) field name conversion provided by the Protobuf
+library:
+ ```
+value.converter.fieldNameConversionType=json
+```
+
+
 ## Handling field renames and deletes
 Renaming and removing fields is supported by the proto IDL, but certain output formats (for example, BigQuery) do not
 support renaming or removal. In order to support these output formats, we use a custom field option to specify the

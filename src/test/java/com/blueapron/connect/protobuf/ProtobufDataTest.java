@@ -368,6 +368,17 @@ public class ProtobufDataTest {
   }
 
   @Test
+  public void testToConnectDataWithMessageCamelCase() throws ParseException {
+    ComplexMapType message = createComplexMapType();
+    ProtobufData protobufData = new ProtobufData(ComplexMapType.class, LEGACY_NAME, true, true);
+    SchemaAndValue result = protobufData.toConnectData(message.toByteArray());
+    assertEquals(
+      result.schema().fields().stream().map(field -> field.name()).toArray(),
+      new String[] {"userId", "userMessages"}
+    );
+  }
+
+  @Test
   public void testToConnectDataWithMessageWithNestedMapFieldListOfStruct() throws ParseException {
     ComplexMapType message = createComplexMapType();
     ProtobufData protobufData = new ProtobufData(ComplexMapType.class, LEGACY_NAME);
